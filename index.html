@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>박지원 — Backend Developer</title>
+<meta name="description" content="기록으로 문제를 해결하는 백엔드 개발자 박지원의 포트폴리오">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f6f7f9;
+    --card: #ffffff;
+    --text: #16181d;
+    --text-dim: #55606e;
+    --border: #e4e7eb;
+    --accent: #3457d5;
+    --accent-soft: #eef1fc;
+    --tag-bg: #f0f2f5;
+    --code-bg: #f5f6f8;
+    --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --bg-alt: #14171d;
+      --card: #171a21;
+      --text: #e7e9ee;
+      --text-dim: #97a1b0;
+      --border: #262b34;
+      --accent: #7c93ff;
+      --accent-soft: #1c2340;
+      --tag-bg: #1e222b;
+      --code-bg: #14171d;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1115; --bg-alt: #14171d; --card: #171a21; --text: #e7e9ee; --text-dim: #97a1b0;
+    --border: #262b34; --accent: #7c93ff; --accent-soft: #1c2340; --tag-bg: #1e222b; --code-bg: #14171d;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.25);
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --bg-alt: #f6f7f9; --card: #ffffff; --text: #16181d; --text-dim: #55606e;
+    --border: #e4e7eb; --accent: #3457d5; --accent-soft: #eef1fc; --tag-bg: #f0f2f5; --code-bg: #f5f6f8;
+    --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  code, .mono { font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+
+  /* nav */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 880px; margin: 0 auto; }
+  .navbar .brand { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+  .navlinks { display: flex; gap: 18px; font-size: 13.5px; color: var(--text-dim); flex-wrap: wrap; }
+  .navlinks a { color: var(--text-dim); }
+  .navlinks a:hover { color: var(--text); text-decoration: none; }
+  .theme-toggle {
+    border: 1px solid var(--border); background: var(--card); color: var(--text-dim);
+    border-radius: 999px; width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; margin-left: 12px;
+  }
+
+  /* hero */
+  header.hero { padding: 72px 0 48px; }
+  .eyebrow { color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
+  h1.name { font-size: clamp(32px, 5vw, 46px); margin: 0 0 8px; letter-spacing: -0.02em; }
+  .role { font-size: 17px; color: var(--text-dim); margin-bottom: 22px; }
+  .slogan { font-size: 19px; font-weight: 600; margin-bottom: 18px; }
+  .intro { color: var(--text-dim); max-width: 680px; font-size: 15.5px; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 14px;
+    font-size: 13.5px; color: var(--text); background: var(--card); box-shadow: var(--shadow);
+  }
+  .btn:hover { border-color: var(--accent); text-decoration: none; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  section { padding: 44px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+  h2.section-title { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .section-sub { color: var(--text-dim); font-size: 14px; margin-bottom: 28px; }
+
+  /* skills */
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; }
+  .skill-group h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin: 0 0 10px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: var(--tag-bg); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 12.5px; }
+
+  /* project cards */
+  .project { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 20px; box-shadow: var(--shadow); }
+  .project-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
+  .project-title { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .award-badge { font-size: 12px; background: var(--accent-soft); color: var(--accent); padding: 3px 9px; border-radius: 999px; font-weight: 600; }
+  .project-meta { font-size: 13px; color: var(--text-dim); margin-bottom: 14px; }
+  .project-desc { font-size: 14.5px; color: var(--text-dim); margin-bottom: 14px; }
+  .project ul { margin: 0 0 14px; padding-left: 20px; font-size: 14px; }
+  .project li { margin-bottom: 6px; }
+  .project-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+  /* deep dive */
+  .dive { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; }
+  .dive summary { cursor: pointer; list-style: none; padding: 18px 22px; font-weight: 600; font-size: 15.5px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .dive summary::-webkit-details-marker { display: none; }
+  .dive summary .proj-tag { font-size: 11.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .dive summary .chev { color: var(--text-dim); transition: transform .15s ease; font-size: 13px; }
+  .dive[open] summary .chev { transform: rotate(90deg); }
+  .dive-body { padding: 0 22px 22px; font-size: 14.5px; color: var(--text-dim); border-top: 1px solid var(--border); }
+  .dive-body h4 { color: var(--text); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; margin: 18px 0 6px; }
+  .dive-body h4:first-child { margin-top: 18px; }
+  .dive-body p { margin: 0 0 6px; }
+  .dive-body .limit { background: var(--bg-alt); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 6px; }
+  .stat-line { font-family: "SF Mono", monospace; font-size: 13.5px; color: var(--text); background: var(--code-bg); padding: 8px 12px; border-radius: 8px; display: inline-block; margin-top: 4px; }
+
+  /* contribution table */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-dim); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; background: var(--bg-alt); }
+  tr:last-child td { border-bottom: none; }
+  .note { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+
+  /* edu / awards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .list-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .list-item:last-child { border-bottom: none; }
+  .list-item .li-title { font-weight: 600; font-size: 14.5px; }
+  .list-item .li-sub { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+
+  footer { padding: 40px 0 60px; text-align: center; color: var(--text-dim); font-size: 13px; }
+  footer .links { justify-content: center; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navbar">
+    <div class="brand">박지원</div>
+    <div class="navlinks">
+      <a href="#about">소개</a>
+      <a href="#skills">기술</a>
+      <a href="#projects">프로젝트</a>
+      <a href="#deepdive">트러블슈팅</a>
+      <a href="#awards">수상·교육</a>
+      <a href="#contact">연락처</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">◐</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero" id="about">
+    <div class="eyebrow">Backend Developer</div>
+    <h1 class="name">박지원</h1>
+    <div class="role">Java · Spring Boot · Docker · AWS EC2</div>
+    <div class="slogan">기록으로 문제를 해결하는 박지원입니다</div>
+    <p class="intro">
+      Spring Boot 기반 서비스에서 API와 데이터 모델을 설계하고, 테스트와 운영 환경까지 연결해 문제를 해결해 왔습니다.
+      클라이언트 입력에 의존하던 채점을 서버 중심 구조로 전환하고, 테스트 종료 지연의 원인을 컨테이너와 자원 생명주기에서 찾아
+      전체 테스트 시간을 약 77% 단축했습니다. 이 문제도 &lsquo;개별 테스트 656ms, 전체 6분&rsquo;이라는 측정 기록의 모순에서
+      출발했습니다. 문제의 증상, 시도한 명령, 확인 결과를 트러블슈팅 노트와 블로그로 남기고, 다음 문제는 그 기록에서 시작합니다.
+    </p>
+    <p class="intro" style="margin-top:14px;">
+      철학과에서 컴퓨터공학을 복수전공하며 개발을 시작했습니다. 로컬에서 만든 서비스를 EC2에 배포해 다른 사람이 접근할 수
+      있게 되었을 때 느낀 성취감이 지금까지의 방향을 지지해 왔고, SSAFY에서 인프라 역할을 두 차례 맡은 뒤 백엔드 개발자에게도
+      인프라 역량이 중요하다고 판단했습니다. 현재는 서버와 운영 환경까지 책임지는 백엔드 개발자를 지향합니다.
+    </p>
+    <div class="links">
+      <a class="btn primary" href="mailto:love990890@naver.com">✉️ 이메일 보내기</a>
+      <a class="btn" href="https://github.com/jiwon824" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://im-your-supporter.tistory.com/" target="_blank" rel="noopener">기술 블로그</a>
+    </div>
+  </header>
+
+  <section id="skills">
+    <h2 class="section-title">기술 스택</h2>
+    <p class="section-sub">프로젝트에서 직접 사용하며 익힌 기술입니다.</p>
+    <div class="skill-grid">
+      <div class="skill-group">
+        <h3>Backend</h3>
+        <div class="tag-row">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot</span><span class="tag">Spring Data JPA</span>
+          <span class="tag">QueryDSL</span><span class="tag">Gradle</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Database</h3>
+        <div class="tag-row">
+          <span class="tag">MySQL</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span>
+          <span class="tag">MongoDB</span><span class="tag">pgvector</span><span class="tag">Flyway</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Infra / DevOps</h3>
+        <div class="tag-row">
+          <span class="tag">Docker</span><span class="tag">Docker Compose</span><span class="tag">Nginx</span>
+          <span class="tag">AWS EC2</span><span class="tag">GitLab CI/CD</span><span class="tag">Prometheus</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Test / Frontend</h3>
+        <div class="tag-row">
+          <span class="tag">JUnit 5</span><span class="tag">Mockito</span><span class="tag">Testcontainers</span>
+          <span class="tag">k6</span><span class="tag">React</span><span class="tag">TypeScript</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Collaboration</h3>
+        <div class="tag-row">
+          <span class="tag">Git</span><span class="tag">GitLab</span><span class="tag">Jira</span><span class="tag">Notion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2 class="section-title">프로젝트</h2>
+    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다.</p>
+
+    <div class="project">
+      <div class="project-head">
+        <div class="project-title">아이다 <span class="award-badge">🥇 우수상 1등</span></div>
+      </div>
+      <div class="project-meta">2026.04.06 – 2026.05.21 (7주) · 6인 팀 (FE 2 · BE 1 · Infra 1 · AI 2) · 담당: Infra, FE</div>
+      <div class="project-desc">
+        초등학생이 AI의 오답을 직접 경험하고, 데이터를 보완하며 결과 변화를 확인하는 스토리 기반 AI 리터러시 교육 서비스입니다.
+      </div>
+      <ul>
+        <li>Docker Compose 기반 로컬·운영 환경을 분리하고 Nginx·HTTPS(Certbot 공유 볼륨)·백엔드 healthcheck 구성</li>
+        <li>GitLab CI 검증 단계와 EC2 자동 배포, GitLab Webhook 기반 Discord·Mattermost 알림 서버 구현</li>
+        <li>Spring Boot Actuator + Prometheus 연동으로 서비스 모니터링 환경 구성</li>
+        <li>PNG 이미지 280개를 WebP로 변환하는 pre-commit 자동화로 정적 자산 용량 36% 절감</li>
+        <li>QA 이슈의 긴급도·난이도 분류 기준 수립</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tag-row">
+          <span class="tag">Docker Compose</span><span class="tag">Nginx</span><span class="tag">PostgreSQL</span>
+          <span class="tag">Redis</span><span class="tag">GitLab CI/CD</span><span class="tag">Prometheus</span>
+        </div>
+        <a href="https://github.com/jiwon824/aida" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-head">
+        <div class="project-title">뉴스바라 <span class="award-badge">🥉 우수상 3등</span></div>
+      </div>
+      <div class="project-meta">2026.02.19 – 2026.03.30 (6주) · 6인 팀 (FE 3 · BE 3, 각자 인프라·데이터·AI 겸임) · 담당: Backend, Infra</div>
+      <div class="project-desc">
+        관심 키워드와 기사 임베딩을 기반으로 개인화된 IT 뉴스·인사이트를 추천하는 큐레이션 서비스입니다.
+      </div>
+      <ul>
+        <li>전체 테스트 실행 시간을 측정해 종료 단계의 병목을 확인하고 <b>6분 38초 → 1분 33초(약 77% 단축)</b> 개선 — 상세는 아래 트러블슈팅 참고</li>
+        <li>회원·추천·기사·퀴즈·복습 Backend API 구현, 관계 데이터는 PostgreSQL·기사 본문은 MongoDB·추천 상태는 Redis로 저장소 역할 분리</li>
+        <li>같은 날 중복 정답 제출 시 발생하던 500 오류를 DB 수준 멱등 처리로 해결해 스트릭 적립 신뢰성 확보</li>
+        <li>Redis 추천 pool과 DB fallback을 결합해 추천 후보 부족 상황에서도 응답 안정성 확보</li>
+        <li>Docker Compose, Nginx, GitLab CI/CD 기반 EC2 운영 배포 환경 구성 및 HTTPS 적용</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tag-row">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot</span><span class="tag">PostgreSQL</span>
+          <span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">Testcontainers</span>
+        </div>
+        <a href="https://github.com/jiwon824/newsbara" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-head">
+        <div class="project-title">SQUIZ</div>
+      </div>
+      <div class="project-meta">2026.01.05 – 2026.02.09 (5주) · 6인 팀 (FE 1 · BE 4 · AI/Infra 1) · 담당: Full Stack (퀴즈 도메인)</div>
+      <div class="project-desc">
+        스터디 생성부터 퀴즈 학습, 복습, 통계까지 연결한 FSRS 기반 AI 학습 플랫폼입니다.
+      </div>
+      <ul>
+        <li>퀴즈 코스·연속 퀴즈·복습·통계 API 구현, 답안 제출부터 임시저장·재개까지 end-to-end 연결</li>
+        <li>클라이언트가 보내던 <code>isCorrect</code>를 제거하고 서버가 정답 데이터와 문제 유형 기준으로 직접 채점하도록 재설계 — 상세는 아래 트러블슈팅 참고</li>
+        <li>복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고 FSRS로 다음 복습 시점 계산</li>
+        <li>attemptId 기반 재개 흐름으로 재접속 후 답안·진행 상태를 정확히 복구</li>
+        <li>QueryDSL로 오답 목록 조회·정렬·페이지네이션 처리</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tag-row">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot 3.2</span><span class="tag">JPA</span>
+          <span class="tag">QueryDSL</span><span class="tag">MySQL</span><span class="tag">React</span><span class="tag">TypeScript</span>
+        </div>
+        <a href="https://github.com/jiwon824/squiz" target="_blank" rel="noopener">GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="deepdive">
+    <h2 class="section-title">트러블슈팅 딥다이브</h2>
+    <p class="section-sub">이력서의 결과 뒤에 있는 문제 인식과 해결 과정입니다. 한계와 남은 과제도 함께 남깁니다.</p>
+
+    <details class="dive" open>
+      <summary><span>개별 테스트는 656ms인데 전체는 6분 38초 — 뉴스바라 테스트 종료 지연</span><span class="proj-tag">뉴스바라</span><span class="chev">▸</span></summary>
+      <div class="dive-body">
+        <h4>상황</h4>
+        <p>CI 파이프라인이 지연되어 코드 변경부터 배포 반영까지의 시간이 길어졌습니다. 전체 테스트 실행에 6분 38초가 소요됐습니다.</p>
+        <h4>문제 인식</h4>
+        <p><code>afterTest</code> 훅으로 개별 테스트 시간을 측정하자 최장 테스트가 656ms에 불과했습니다. 테스트 실행 자체가 아니라 <b>종료 단계</b>가 병목이라는 모순을 발견했습니다.</p>
+        <h4>원인</h4>
+        <p>테스트 본문은 종료됐지만 Redis/Lettuce 재연결 스레드와 Hikari shutdown 로그가 반복되며 JVM 종료가 지연되고 있었습니다. Hibernate <code>ddl-auto</code>가 <code>create-drop</code>이라 컨테이너 종료 이후에도 불필요한 drop 시도가 발생했습니다.</p>
+        <h4>해결</h4>
+        <p>Testcontainers를 <code>Startables.deepStart()</code>로 초기화 순서를 고정하고, AsyncExecutor에 shutdown 대기 정책을 적용했습니다. Redis 테스트 설정의 connect/command/shutdown timeout을 축소해 재연결 시도 지연을 제거하고, Hibernate <code>ddl-auto</code>를 <code>create</code>로 변경했습니다.</p>
+        <h4>결과</h4>
+        <p class="stat-line">6분 38초 → 1분 33초 (약 77% 단축) · 159개(단위 93 + 통합 66) 전체 통과 재검증</p>
+        <div class="limit">
+          <b>한계:</b> 원인 분석과 개선 과정에서 AI의 도움을 받은 비중이 컸습니다. 직접 측정한 범위와 AI에 맡긴 범위, 이후 직접 검증한 부분을 구분해 정리하는 작업을 이어가고 있습니다.
+        </div>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span>왜 클라이언트를 믿지 않는가 — SQUIZ 서버 중심 채점</span><span class="proj-tag">SQUIZ</span><span class="chev">▸</span></summary>
+      <div class="dive-body">
+        <h4>상황</h4>
+        <p>답안 제출 단계에서 클라이언트가 채점 결과(<code>isCorrect</code>)를 직접 서버로 전달하는 구조였습니다.</p>
+        <h4>문제 인식</h4>
+        <p>요청 값을 조작하면 채점 결과를 임의로 바꿀 수 있어, 추천·복습 서비스의 핵심 신뢰성이 깨질 수 있는 구조였습니다.</p>
+        <h4>해결</h4>
+        <p>클라이언트는 선택한 답안 값만 전달하고, 서버가 이를 Set으로 파싱해 보유한 정답과 비교하는 방식으로 직접 채점하도록 변경했습니다. 이후 요구사항이 문제집 방식에서 연속 퀴즈로 바뀌자, 진행 상태·다음 문제 선택·섹션 접근 규칙까지 서버 중심 API로 재설계했습니다.</p>
+        <h4>부속 설계</h4>
+        <p>현재 복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고, FSRS 알고리즘으로 다음 복습 시점을 계산해 갱신했습니다.</p>
+        <h4>결과</h4>
+        <p class="stat-line">요청 조작으로 채점 결과를 변경할 수 없는 구조 확보</p>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span>왜 DB 수준인가 — 뉴스바라 멱등성과 저장소 역할 분리</span><span class="proj-tag">뉴스바라</span><span class="chev">▸</span></summary>
+      <div class="dive-body">
+        <h4>상황</h4>
+        <p>하루 한 번 제공되는 오늘의 퀴즈를 같은 날 중복 제출하면, unique 제약 충돌로 500 오류가 발생했습니다.</p>
+        <h4>결정</h4>
+        <p>애플리케이션 레벨에서 예외를 해석해 처리하는 대신 <code>ON CONFLICT DO NOTHING</code>으로 DB 수준에서 멱등 처리해, 하루 한 번의 스트릭 적립을 보장했습니다.</p>
+        <h4>부속 설계</h4>
+        <p>관계와 정합성이 중요한 서비스 데이터는 PostgreSQL, 구조가 유연한 기사 원문은 MongoDB, 추천 후보군·이력 등 실행 상태는 Redis로 저장소 역할을 분리했습니다. Redis 추천 풀은 임시 키에 새 데이터를 채운 뒤 <code>RENAME</code>으로 교체해 교체 과정의 원자성을 확보했고, 후보가 부족하면 DB 조회로 보충하는 fallback 구조를 추가했습니다.</p>
+        <h4>결과</h4>
+        <p class="stat-line">중복 요청·후보 부족 상황에서도 API가 실패하지 않는 안정적 응답 확보</p>
+      </div>
+    </details>
+
+    <details class="dive">
+      <summary><span>설정의 영속성 ≠ 데이터의 영속성 — 아이다 Prometheus 데이터 유실</span><span class="proj-tag">아이다</span><span class="chev">▸</span></summary>
+      <div class="dive-body">
+        <h4>상황</h4>
+        <p>운영 환경에서 <code>docker compose down/up</code>으로 재배포할 때마다 Prometheus에 쌓인 모니터링 지표가 사라졌습니다.</p>
+        <h4>원인</h4>
+        <p>Prometheus 컨테이너의 TSDB 데이터 경로가 별도 볼륨에 연결돼 있지 않아, 컨테이너 재생성 시 함께 삭제되고 있었습니다. 설정 파일은 이미지·마운트로 영속이지만, 런타임 데이터는 그렇지 않다는 것을 구분하게 된 지점입니다.</p>
+        <h4>해결</h4>
+        <p>Prometheus TSDB 경로를 named volume으로 분리해, 재배포 이후에도 지표 이력이 보존되도록 개선했습니다.</p>
+        <div class="limit">
+          <b>한계:</b> Grafana 대시보드는 구성하지 않아 지표 수집까지만 진행했고, 알림 임계치·시각화는 다루지 못했습니다. k6 테스트도 health endpoint 대상 스모크 테스트(1 VU·5회) 수준이라, 실제 부하·장애 상황에 대한 검증은 진행하지 못했습니다.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="awards">
+    <h2 class="section-title">수상 · 교육 · 자격</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:8px;">수상 · 활동</h3>
+        <div class="list-item"><div class="li-title">아이다 프로젝트 우수상 (1등)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2026.05</div></div>
+        <div class="list-item"><div class="li-title">뉴스바라 프로젝트 우수상 (3등)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2026.04</div></div>
+        <div class="list-item"><div class="li-title">SSAFY 9월 우수 스터디 (알고리즘)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2025.09</div></div>
+        <div class="list-item"><div class="li-title">SQLD</div><div class="li-sub">한국데이터산업진흥원 · 2025.12</div></div>
+        <div class="list-item"><div class="li-title">정보처리기사</div><div class="li-sub">한국산업인력공단 · 2024.12</div></div>
+        <div class="list-item"><div class="li-title">TOEIC Speaking IM2</div><div class="li-sub">2026.04</div></div>
+      </div>
+      <div>
+        <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:8px;">교육</h3>
+        <div class="list-item"><div class="li-title">삼성 청년 SW·AI 아카데미(SSAFY) 14기</div><div class="li-sub">2025.07 – 2026.06</div></div>
+        <div class="list-item"><div class="li-title">에티버스러닝 유니티 부트캠프 1기</div><div class="li-sub">대한상공회의소 · 2023.06 – 2023.12</div></div>
+        <div class="list-item"><div class="li-title">한국외국어대학교</div><div class="li-sub">철학과 졸업, 컴퓨터전자시스템공학과 복수전공 · 2018.02 – 2022.08</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div>기록으로 문제를 해결하는 개발자, 박지원입니다.</div>
+    <div class="links">
+      <a class="btn" href="mailto:love990890@naver.com">✉️ love990890@naver.com</a>
+      <a class="btn" href="https://github.com/jiwon824" target="_blank" rel="noopener">github.com/jiwon824</a>
+      <a class="btn" href="https://im-your-supporter.tistory.com/" target="_blank" rel="noopener">기술 블로그</a>
+    </div>
+    <div style="margin-top:24px;">© 2026 박지원</div>
+  </footer>
+
+</div>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const stored = localStorage.getItem('theme');
+  if (stored) root.setAttribute('data-theme', stored);
+  toggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+</script>
+
+</body>
+</html>
