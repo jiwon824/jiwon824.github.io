@@ -280,16 +280,16 @@
 
   <section id="projects">
     <h2 class="section-title">프로젝트</h2>
-    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다. 카드를 클릭하면 상세 내용을 볼 수 있습니다.</p>
+    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다. 아이다와 SQUIZ는 카드를 클릭하면 데모를 직접 체험할 수 있습니다.</p>
 
     <div class="project-gallery">
-      <button class="gallery-card" onclick="openProject('aida')">
+      <a class="gallery-card" href="demos/aida.html">
         <div class="gallery-thumb">아이다</div>
         <div class="gallery-title">아이다 <span class="award-badge">🥇 1등</span></div>
         <div class="gallery-meta">2026.04 – 2026.05 · 담당: Infra, FE</div>
         <div class="gallery-desc">AI의 오답을 직접 경험하며 데이터를 보완하는 스토리 기반 AI 리터러시 교육 서비스</div>
-        <div class="gallery-more">자세히 보기 →</div>
-      </button>
+        <div class="gallery-more">데모 체험하기 →</div>
+      </a>
 
       <button class="gallery-card" onclick="openProject('newsbara')">
         <div class="gallery-thumb">뉴스바라</div>
@@ -492,10 +492,10 @@
   const modalBody = document.getElementById('modalBody');
 
   // 상세·트러블슈팅 모달.
-  // SQUIZ 카드는 모달이 아니라 데모 페이지(demos/squiz.html)로 직접 이동한다 —
+  // 데모가 있는 아이다·SQUIZ 카드는 모달이 아니라 데모 페이지로 직접 이동한다 —
   // 모달 안에 iframe으로 띄우면 뒤로가기가 "데모 안에서 한 단계 뒤로"인지
   // "모달 닫기"인지 모호해지지만, 일반 페이지 이동이면 히스토리가 하나로 합쳐진다.
-  // SQUIZ 상세는 데모 페이지의 "상세 · 트러블슈팅" 링크(#squiz)로 들어온다.
+  // 두 프로젝트의 상세는 데모 페이지의 "상세 · 트러블슈팅" 링크(#aida, #squiz)로 들어온다.
   function openProject(id) {
     const tpl = document.getElementById('tpl-' + id);
     if (!tpl) return;
