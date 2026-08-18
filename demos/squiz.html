@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SQUIZ 데모 · 퀴즈 도메인</title>
+<style>
+/* =============================================================================
+   SQUIZ 디자인 토큰
+   원본: modustudy/frontend/src/assets/styles/index.css (라이트 테마)
+   ============================================================================= */
+:root {
+  --color-white: #FFFFFF;
+  --color-black: #202124;
+  --color-gray-50: #F8F9FA;
+  --color-gray-100: #E8EAED;
+  --color-gray-300: #DADCE0;
+  --color-gray-500: #5F6368;
+  --color-gray-700: #3C4043;
+
+  --color-google-blue: #4285F4;
+  --color-google-red: #EA4335;
+  --color-google-yellow: #FBBC04;
+  --color-google-green: #34A853;
+  --color-google-blue-light: #E8F0FE;
+  --color-google-red-light: #FCE8E6;
+  --color-google-yellow-light: #FEF7E0;
+  --color-google-green-light: #E6F4EA;
+
+  --color-primary: var(--color-google-blue);
+  --color-secondary: var(--color-google-green);
+  --color-accent: var(--color-google-yellow);
+  --color-bg: var(--color-gray-50);
+
+  --color-primary-light: #7BAAF7;
+  --color-primary-dark: #1A73E8;
+  --color-primary-alpha-10: rgba(66, 133, 244, 0.1);
+  --color-primary-alpha-20: rgba(66, 133, 244, 0.2);
+
+  --color-secondary-dark: #1E8E3E;
+  --color-secondary-alpha-20: rgba(52, 168, 83, 0.2);
+
+  --color-background: var(--color-bg);
+  --color-background-secondary: #F1F3F4;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #FFFEF8;
+
+  --color-text-primary: var(--color-black);
+  --color-text-secondary: var(--color-gray-700);
+  --color-text-tertiary: var(--color-gray-500);
+
+  --color-success: var(--color-google-green);
+  --color-success-light: var(--color-google-green-light);
+  --color-warning: var(--color-google-yellow);
+  --color-warning-light: var(--color-google-yellow-light);
+  --color-warning-dark: #F9AB00;
+  --color-error: var(--color-google-red);
+  --color-error-light: var(--color-google-red-light);
+  --color-info: var(--color-google-blue);
+  --color-info-light: var(--color-google-blue-light);
+
+  --border-light: rgba(128, 161, 186, 0.2);
+  --color-border: var(--border-light);
+
+  --color-shadow: rgba(44, 62, 80, 0.06);
+  --color-shadow-medium: rgba(44, 62, 80, 0.1);
+  --color-shadow-strong: rgba(44, 62, 80, 0.14);
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-relaxed: 1.75;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  --radius-main: 8px;
+  --radius-pill: 24px;
+  --radius-sm: 0.25rem;
+  --radius-md: var(--radius-main);
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 4px var(--color-shadow);
+  --shadow-md: 0 4px 8px var(--color-shadow-medium);
+  --shadow-xl: 0 12px 24px var(--color-shadow-strong);
+
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; }
+
+/* =============================================================================
+   데모 크롬 — 실제 앱에는 없는, 데모용 상단 바
+   ============================================================================= */
+.demo-chrome {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #16181d;
+  color: #c9cdd6;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+}
+.demo-chrome .dc-title { font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+.demo-chrome .dc-sep { color: #4a4f5a; }
+.demo-chrome .dc-route {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  background: #23262d;
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: #8ab4f8;
+}
+.demo-chrome .dc-spacer { flex: 1; }
+.demo-chrome .dc-btn {
+  background: #23262d;
+  border: 1px solid #333842;
+  color: #c9cdd6;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.demo-chrome .dc-btn:hover { background: #2c3039; color: #fff; }
+
+/* =============================================================================
+   공통 레이아웃 유틸
+   ============================================================================= */
+.screen { min-height: calc(100vh - 37px); }
+.wrap-7xl { max-width: 80rem; margin: 0 auto; }
+.wrap-6xl { max-width: 72rem; margin: 0 auto; }
+.wrap-4xl { max-width: 56rem; margin: 0 auto; }
+.wrap-3xl { max-width: 48rem; margin: 0 auto; }
+
+/* =============================================================================
+   Button — shared/components/Button 의 google-* 변형 재현
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.btn:disabled { cursor: not-allowed; }
+.btn-sm { padding: 0.375rem 0.75rem; font-size: var(--font-size-sm); }
+.btn-md { padding: 0.5rem 1rem; font-size: var(--font-size-base); }
+.btn-lg { padding: 0.75rem 1.25rem; font-size: var(--font-size-base); }
+
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--color-primary-dark); box-shadow: var(--shadow-md); }
+.btn-primary:disabled { opacity: 0.5; }
+
+.btn-outline { background: transparent; color: var(--color-primary); border-color: var(--color-primary); }
+.btn-outline:hover:not(:disabled) { background: var(--color-primary-alpha-10); }
+
+.btn-ghost { background: transparent; color: var(--color-text-secondary); }
+.btn-ghost:hover:not(:disabled) { background: var(--color-gray-100); }
+
+.btn-danger { background: var(--color-error); color: #fff; }
+.btn-danger:hover:not(:disabled) { background: #C5221F; }
+
+.btn-secondary { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.btn-secondary:hover:not(:disabled) { background: var(--color-gray-100); }
+
+/* =============================================================================
+   PageNavHeader / Breadcrumb
+   ============================================================================= */
+.page-nav { margin-bottom: var(--spacing-xl); }
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--color-text-tertiary); text-decoration: none; cursor: pointer; }
+.breadcrumb a:hover { color: var(--color-primary); text-decoration: underline; }
+.breadcrumb .sep { opacity: 0.5; }
+.breadcrumb .current { color: var(--color-text-secondary); font-weight: var(--font-weight-medium); }
+.page-nav-row { display: flex; align-items: center; gap: 12px; }
+.page-nav-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); margin: 0; }
+
+/* =============================================================================
+   QuizGameSelection — /quiz
+   ============================================================================= */
+.game-screen { background: #fff; padding: 24px; }
+@media (min-width: 768px) { .game-screen { padding: 32px; } }
+@media (min-width: 1024px) { .game-screen { padding: 40px; } }
+
+.game-header {
+  position: relative;
+  margin-bottom: 48px;
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+@media (min-width: 768px) { .game-header { padding: 40px; } }
+
+.game-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 10;
+}
+@media (min-width: 768px) {
+  .game-header-row { flex-direction: row; align-items: center; justify-content: space-between; }
+}
+.game-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--color-google-blue);
+  font-weight: 900; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.game-title {
+  font-size: 2.25rem; font-weight: 900; letter-spacing: -0.025em;
+  margin: 0 0 12px; color: #1f2937;
+}
+@media (min-width: 768px) { .game-title { font-size: 3rem; } }
+.game-sub { font-size: 1.125rem; font-weight: 500; color: #4b5563; margin: 0; }
+
+.mascot-slot { display: none; position: relative; }
+@media (min-width: 768px) { .mascot-slot { display: block; } }
+
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+@media (min-width: 768px) { .game-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; } }
+@media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
+
+.game-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 24px;
+  padding: 28px;
+  transition: all 500ms;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 380px;
+  border: none;
+  text-align: left;
+  animation: slideInUp 600ms ease-out backwards;
+}
+@media (min-width: 768px) { .game-card { padding: 36px; } }
+@media (min-width: 1024px) { .game-card { padding: 40px; } }
+.game-card:hover { transform: translateY(-16px); }
+
+.gc-commentle { background: linear-gradient(to bottom right, #EFF6FF, #ECFEFF); }
+.gc-contest   { background: linear-gradient(to bottom right, #ECFDF5, #F0FDF4); }
+.gc-practice  { background: linear-gradient(to bottom right, #FFFBEB, #FFF7ED); }
+
+.gc-sparkle {
+  position: absolute; top: 16px; right: 16px;
+  opacity: 0; transition: opacity 300ms; color: #FBBF24;
+}
+.game-card:hover .gc-sparkle { opacity: 1; }
+
+.gc-tagrow { height: 24px; margin-bottom: 8px; }
+.gc-tag {
+  display: inline-block; padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+}
+.gc-tag-hot { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+.gc-tag-soon { background: #F3F4F6; color: #6B7280; border: 1px solid #E5E7EB; }
+
+.gc-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: var(--radius-xl);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  transition: all 500ms; margin-bottom: 20px;
+}
+.game-card:hover .gc-icon { transform: scale(1.1) rotate(6deg); }
+.gc-icon-commentle { background: linear-gradient(to bottom right, #3B82F6, #22D3EE); }
+.gc-icon-contest   { background: linear-gradient(to bottom right, #10B981, #4ADE80); }
+.gc-icon-practice  { background: linear-gradient(to bottom right, #F59E0B, #FB923C); }
+
+.gc-body { display: flex; flex-direction: column; flex-grow: 1; }
+.gc-name { font-size: 1.25rem; font-weight: 900; color: #1f2937; margin: 0 0 4px; }
+@media (min-width: 768px) { .gc-name { font-size: 1.5rem; } }
+.gc-subtitle { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.025em; margin: 0; }
+.gc-sub-commentle { color: #2563EB; }
+.gc-sub-contest { color: #059669; }
+.gc-sub-practice { color: #D97706; }
+.gc-desc { font-size: 0.875rem; color: #4B5563; line-height: 1.625; margin: 12px 0 16px; }
+
+.gc-fx { height: 42px; display: flex; align-items: center; }
+.gc-terminal {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  font-size: 12px; background: #111827; color: #4ADE80;
+  padding: 8px 12px; border-radius: var(--radius-lg); width: 100%;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+.gc-versus { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; }
+.gc-fighter {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; font-weight: 900;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+.gc-fighter-p1 { background: linear-gradient(to bottom right, #60A5FA, #2563EB); }
+.gc-fighter-p2 { background: linear-gradient(to bottom right, #F87171, #DC2626); }
+.gc-vs { font-size: 1.125rem; font-weight: 900; color: #F97316; }
+.gc-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #6B7280; margin-bottom: 4px; }
+.gc-progress-track { height: 8px; background: rgba(255,255,255,0.5); border-radius: var(--radius-full); overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+.gc-progress-fill { height: 100%; background: linear-gradient(to right, #FBBF24, #F97316); border-radius: var(--radius-full); }
+
+.gc-footer {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid rgba(229,231,235,0.5);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.gc-footer span { font-size: 12px; font-weight: 500; color: #9CA3AF; }
+.gc-footer .gc-arrow { color: #9CA3AF; transition: all 300ms; }
+.game-card:hover .gc-footer .gc-arrow { color: #4B5563; transform: translateX(4px); }
+
+/* 애니메이션 — DashboardV2.css 원본 */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes typingCursor { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+.typing-cursor {
+  display: inline-block; width: 2px; height: 1em;
+  background-color: currentColor; margin-left: 2px;
+  animation: typingCursor 1s infinite;
+}
+@keyframes progressFill { 0% { width: 0%; } 50% { width: 75%; } 100% { width: 100%; } }
+@keyframes progressPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+.progress-bar-animated { animation: progressFill 3s ease-in-out infinite; }
+.progress-bar-pulse { animation: progressPulse 1.5s ease-in-out infinite; color: #D97706; font-weight: 500; }
+@keyframes fighterLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+@keyframes fighterRight { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
+@keyframes vsPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+.fighter-left { animation: fighterLeft 0.8s ease-in-out infinite; }
+.fighter-right { animation: fighterRight 0.8s ease-in-out infinite; animation-delay: 0.4s; }
+.vs-pulse { animation: vsPulse 1s ease-in-out infinite; }
+
+.bubble-container { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0) scale(1); opacity: 0; }
+  5%   { opacity: 0.7; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-150px) scale(0.6); opacity: 0; }
+}
+@keyframes bubbleWobble {
+  0%, 100% { margin-left: 0; }
+  25% { margin-left: -4px; }
+  75% { margin-left: 4px; }
+}
+.bubble {
+  position: absolute; bottom: -20px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(66,133,244,0.4) 0%, rgba(66,133,244,0.15) 100%);
+  border: 1px solid rgba(66,133,244,0.3);
+  animation: bubbleFloat 4s ease-out infinite, bubbleWobble 2s ease-in-out infinite;
+  pointer-events: none;
+}
+.bubble::before {
+  content: ''; position: absolute; top: 15%; left: 20%;
+  width: 30%; height: 30%; background: rgba(255,255,255,0.7); border-radius: 50%;
+}
+.bubble-1 { width: 14px; height: 14px; left: 5%;  animation-delay: 0s;   animation-duration: 3.5s, 2s; }
+.bubble-2 { width: 10px; height: 10px; left: 15%; animation-delay: 0.7s; animation-duration: 4s, 2.2s; }
+.bubble-3 { width: 16px; height: 16px; left: 25%; animation-delay: 1.4s; animation-duration: 3.8s, 1.8s; }
+.bubble-4 { width: 8px;  height: 8px;  left: 35%; animation-delay: 0.3s; animation-duration: 4.2s, 2.5s; }
+.bubble-5 { width: 12px; height: 12px; left: 45%; animation-delay: 2s;   animation-duration: 3.6s, 2.1s; }
+.bubble-6 { width: 9px;  height: 9px;  left: 55%; animation-delay: 1s;   animation-duration: 4.5s, 1.9s; }
+.bubble-7 { width: 11px; height: 11px; left: 65%; animation-delay: 1.8s; animation-duration: 3.9s, 2.3s; }
+.bubble-8 { width: 13px; height: 13px; left: 75%; animation-delay: 0.5s; animation-duration: 4.1s, 2s; }
+
+/* 마스코트 */
+.mascot { position: relative; display: inline-block; filter: drop-shadow(0 20px 13px rgba(0,0,0,0.15)); }
+.mascot img { width: 100%; height: 100%; object-fit: contain; user-select: none; }
+.pupil {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 35% 35%, #3d3d4d 0%, #1a1a2d 100%);
+  box-shadow: inset 0 -1px 2px rgba(255,255,255,0.1);
+  transition: transform 0.1s ease-out;
+}
+.pupil .hl { position: absolute; border-radius: 50%; background: #fff; }
+
+/* =============================================================================
+   QuizCourseList — /quiz-practice
+   ============================================================================= */
+.list-screen { padding: var(--spacing-2xl) var(--spacing-lg); }
+
+.filter-row {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 32px; padding: var(--spacing-md) 0;
+}
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+}
+.course-card {
+  background: #fff;
+  border-radius: 24px;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  width: 100%;
+  display: block;
+}
+.course-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+.cc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.cc-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-badge {
+  padding: 0.25rem 0.75rem; border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+}
+.cc-title { font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); margin: 0 0 8px; color: var(--color-text-primary); }
+.cc-desc { font-size: var(--font-size-sm); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); margin: 0; }
+
+.info-footer {
+  margin-top: 48px; text-align: center;
+  padding: var(--spacing-lg);
+  background: var(--color-primary-alpha-10);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+}
+.info-footer p { margin: 0; line-height: 1.6; }
+
+.empty-state { text-align: center; padding: 48px 0; color: var(--color-text-tertiary); font-size: var(--font-size-lg); }
+
+/* =============================================================================
+   CourseDetail — /quiz-practice/:courseId
+   ============================================================================= */
+.detail-header-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-border);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+.detail-header-wrap { margin-bottom: var(--spacing-xl); }
+.dh-icon { width: 56px; height: 56px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; }
+.dh-badge { padding: 0.375rem 1rem; border-radius: var(--radius-pill); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.dh-title { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); margin: 0 0 12px; }
+.dh-desc { font-size: var(--font-size-base); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); margin: 0; }
+
+.section-list {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+.section-list-head {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background-secondary);
+}
+.section-list-head h2 { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin: 0; }
+.section-row {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-surface);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: none; width: 100%; text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+.section-row:last-child { border-bottom: none; }
+.section-row:hover { background: var(--color-surface-hover); }
+.sr-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sr-body { flex: 1; min-width: 0; }
+.sr-num { font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--color-text-tertiary); display: block; margin-bottom: 4px; }
+.sr-name { font-weight: var(--font-weight-medium); }
+.sr-score {
+  display: flex; align-items: center; gap: 4px;
+  padding: 0.25rem 0.75rem; border-radius: var(--radius-pill);
+  background: var(--color-google-green-light); flex-shrink: 0;
+}
+.sr-score span { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--color-google-green); }
+.sr-start {
+  padding: 0.5rem 1rem; border-radius: var(--radius-md);
+  color: #fff; font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm);
+  border: none; cursor: pointer; flex-shrink: 0;
+  opacity: 0; transition: opacity var(--transition-fast);
+}
+.section-row:hover .sr-start { opacity: 1; }
+
+/* =============================================================================
+   ContinuousQuizSession — /continuous-quiz/:courseId/section/:n
+   ============================================================================= */
+.session-screen { background: var(--color-background); user-select: none; }
+.session-header {
+  position: sticky; top: 37px; z-index: 10;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid var(--color-border);
+}
+.session-header-inner { max-width: 48rem; margin: 0 auto; padding: 16px; }
+.sh-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sh-mode {
+  font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+  padding: 4px 12px; border-radius: var(--radius-full);
+  background: var(--color-primary-light); color: #fff;
+}
+.sh-stats { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.session-main { max-width: 48rem; margin: 0 auto; padding: 32px 16px; }
+
+.question-card {
+  border-radius: var(--radius-2xl);
+  padding: 24px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 32px;
+}
+@media (min-width: 640px) { .question-card { padding: 32px; } }
+.qc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+.qc-num { padding: 4px 12px; border-radius: var(--radius-full); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); background: var(--color-primary); color: #fff; }
+.qc-chip { padding: 4px 12px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
+.qc-chip-type { background: var(--color-gray-100); color: var(--color-text-secondary); }
+.qc-chip-cat { background: var(--color-secondary-alpha-20); color: var(--color-secondary-dark); margin-left: auto; }
+.qc-question {
+  font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);
+  margin-bottom: 24px; line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+}
+@media (min-width: 640px) { .qc-question { font-size: var(--font-size-xl); } }
+.qc-blank {
+  background: var(--color-warning-light); color: var(--color-warning-dark);
+  padding: 2px 12px; border-radius: 4px; font-weight: 700; margin: 0 4px;
+}
+.qc-options { display: flex; flex-direction: column; gap: 12px; }
+.qc-option {
+  width: 100%; display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px; border-radius: var(--radius-xl); text-align: left;
+  transition: all 200ms; border: 2px solid var(--color-border);
+  background: var(--color-surface); cursor: pointer;
+}
+.qc-option:hover { transform: scale(1.01); }
+.qc-option.selected { background: var(--color-primary-alpha-10); border-color: var(--color-primary); }
+.qc-option .label { font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+.qc-option.selected .label { color: var(--color-primary-dark); }
+.qc-input {
+  width: 100%; padding: 12px 16px; border-radius: var(--radius-xl);
+  font-size: var(--font-size-base); font-weight: var(--font-weight-medium);
+  transition: all 200ms; outline: none;
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+  user-select: text;
+  font-family: inherit;
+}
+.qc-input:focus { border-color: var(--color-primary); background: var(--color-surface); }
+.qc-hint { margin-top: 8px; font-size: var(--font-size-sm); color: var(--color-text-tertiary); }
+.qc-nav { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.qc-nav .btn-primary { min-width: 200px; }
+.qc-nav .btn-ghost { min-width: 120px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff;
+  animation: spin 700ms linear infinite;
+}
+
+/* =============================================================================
+   모달 (FeedbackModal / SkipConfirmModal / 학습량 설정)
+   ============================================================================= */
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(0,0,0,0.5);
+  animation: fadeIn 200ms ease-out;
+}
+.overlay.blurred { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.modal-panel {
+  width: 100%; border-radius: var(--radius-2xl); padding: 24px;
+  background: var(--color-surface); box-shadow: var(--shadow-xl);
+  animation: zoomIn 200ms ease-out;
+}
+.modal-sm { max-width: 24rem; }
+.modal-md { max-width: 28rem; }
+.modal-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); margin: 0 0 16px; }
+
+.fb-icon-wrap { display: flex; justify-content: center; margin-bottom: 16px; }
+.fb-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.fb-result { font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); text-align: center; margin: 0 0 8px; }
+.fb-answer { text-align: center; margin-bottom: 16px; padding: 12px; border-radius: var(--radius-lg); background: var(--color-background); }
+.fb-answer .lbl { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.fb-answer p { font-weight: var(--font-weight-medium); margin: 4px 0 0; color: var(--color-text-primary); }
+.fb-explain {
+  font-size: var(--font-size-sm); margin-bottom: 16px; padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-info-light); color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.limit-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.limit-grid .btn { padding: 0.5rem 0; }
+
+/* =============================================================================
+   SessionComplete
+   ============================================================================= */
+.complete-screen {
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: var(--color-background);
+  min-height: calc(100vh - 37px);
+}
+.complete-card {
+  width: 100%; max-width: 28rem; border-radius: var(--radius-2xl);
+  padding: 32px; text-align: center;
+  background: var(--color-surface); box-shadow: var(--shadow-xl);
+}
+.cc-trophy {
+  width: 80px; height: 80px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-warning-light); margin: 0 auto 24px;
+}
+.cc-h2 { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); margin: 0 0 8px; }
+.cc-sub { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin: 0 0 24px; }
+.cc-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 32px; padding: 16px; border-radius: var(--radius-xl);
+  background: var(--color-background);
+}
+.cc-stat-value { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); margin: 0; }
+.cc-stat-label { font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin: 0; }
+.cc-detail { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; color: var(--color-text-secondary); }
+.cc-detail div { display: flex; align-items: center; gap: 8px; }
+.cc-actions { display: flex; flex-direction: column; gap: 12px; }
+
+/* 준비중 화면 */
+.soon-screen {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: calc(100vh - 37px); padding: 24px; text-align: center;
+}
+.soon-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); margin: 0 0 8px; }
+.soon-desc { color: var(--color-text-secondary); margin: 0 0 24px; }
+
+/* 토스트 */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 80; padding: 12px 20px; border-radius: var(--radius-md);
+  background: var(--color-warning-light); color: var(--color-warning-dark);
+  border: 1px solid var(--color-warning);
+  font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 200ms ease-out;
+}
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.flex-1 { flex: 1; }
+.text-center { text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- 데모용 상단 바 (실제 SQUIZ에는 없음) -->
+<div class="demo-chrome">
+  <span class="dc-title">SQUIZ</span>
+  <span class="dc-sep">·</span>
+  <span>퀴즈 도메인 데모</span>
+  <span class="dc-route" id="routeLabel">/quiz</span>
+  <span class="dc-spacer"></span>
+  <button class="dc-btn" id="btnHome">처음으로</button>
+</div>
+
+<div id="app"></div>
+
+<script>
+/* =============================================================================
+   아이콘 (lucide-react 대체 — 인라인 SVG)
+   ============================================================================= */
+const ICONS = {
+  terminal: '<path d="m4 17 6-6-6-6"/><path d="M12 19h8"/>',
+  trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  dumbbell: '<path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/>',
+  sparkles: '<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>',
+  arrowRight: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  arrowLeft: '<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>',
+  filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  bookOpen: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  circle: '<circle cx="12" cy="12" r="10"/>',
+  square: '<rect width="18" height="18" x="3" y="3" rx="2"/>',
+  checkSquare: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/>',
+  xCircle: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+  alertCircle: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+  refreshCw: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+};
+
+function icon(name, size, color, fill) {
+  size = size || 24;
+  color = color || 'currentColor';
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size +
+    '" viewBox="0 0 24 24" fill="' + (fill || 'none') + '" stroke="' + color +
+    '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">' +
+    (ICONS[name] || '') + '</svg>';
+}
+
+/* =============================================================================
+   카테고리 설정
+   원본: features/quiz/types/QuizCourse.types.ts
+   ============================================================================= */
+const FILTER_CATEGORY_CONFIG = {
+  CSFundamentals: { label: 'CS 기초',   color: '#6366F1' },
+  Backend:        { label: '백엔드',     color: '#6DB33F' },
+  Frontend:       { label: '프론트엔드', color: '#61DAFB' },
+  Infrastructure: { label: '인프라',     color: '#FF6B35' },
+  Design:         { label: '설계/기타',  color: '#8B5CF6' },
+  Certification:  { label: '자격증',     color: '#F59E0B' },
+};
+
+const CODE_TO_FILTER_CATEGORY = {
+  OS: 'CSFundamentals', NETWORK: 'CSFundamentals', DB: 'CSFundamentals',
+  ALGORITHM: 'CSFundamentals', COMPUTER_ARCH: 'CSFundamentals',
+  JAVA_SPRING: 'Backend', NODEJS: 'Backend', PYTHON: 'Backend',
+  REACT: 'Frontend', WEB_BASIC: 'Frontend', KOTLIN: 'Frontend',
+  DEVOPS: 'Infrastructure', LINUX: 'Infrastructure', GIT: 'Infrastructure',
+  DESIGN_PATTERN: 'Design', SECURITY: 'Design',
+  CERT_SQLD: 'Certification', CERT_EIP: 'Certification',
+};
+
+const CATEGORY_CONFIG = {
+  OS:             { label: '운영체제',     color: '#9CA3AF' },
+  NETWORK:        { label: '네트워크',     color: '#9CA3AF' },
+  DB:             { label: '데이터베이스', color: '#9CA3AF' },
+  ALGORITHM:      { label: '알고리즘',     color: '#9CA3AF' },
+  COMPUTER_ARCH:  { label: '컴퓨터구조',   color: '#9CA3AF' },
+  JAVA_SPRING:    { label: 'Spring',       color: '#6DB33F' },
+  NODEJS:         { label: 'Node.js',      color: '#339933' },
+  PYTHON:         { label: 'Python',       color: '#3776AB' },
+  REACT:          { label: 'React',        color: '#61DAFB' },
+  WEB_BASIC:      { label: '웹 기초',      color: '#9CA3AF' },
+  KOTLIN:         { label: 'Kotlin',       color: '#7F52FF' },
+  DEVOPS:         { label: 'DevOps',       color: '#9CA3AF' },
+  LINUX:          { label: 'Linux',        color: '#FCC624' },
+  GIT:            { label: 'Git',          color: '#F05032' },
+  DESIGN_PATTERN: { label: '디자인패턴',   color: '#9CA3AF' },
+  SECURITY:       { label: '정보보안',     color: '#9CA3AF' },
+  CERT_SQLD:      { label: 'CERT',         color: '#9CA3AF' },
+  CERT_EIP:       { label: 'CERT',         color: '#9CA3AF' },
+};
+
+/* =============================================================================
+   목업 데이터 — 코스 / 섹션
+   원본 구조: features/quiz/data/quizCourseData.ts, courseDetailData.ts
+   ============================================================================= */
+function sections(names, passedUpTo, scores) {
+  return names.map(function (name, i) {
+    var passed = i < passedUpTo;
+    return {
+      sectionNumber: i + 1,
+      name: name,
+      isUnlocked: true,
+      isPassed: passed,
+      bestScore: passed ? (scores && scores[i] ? scores[i] : 80 + ((i * 7) % 20)) : null,
+    };
+  });
+}
+
+const COURSES = [
+  { courseId: 1, code: 'OS', name: '운영체제',
+    description: '프로세스, 스케줄링, 메모리 관리 등 운영체제의 핵심 개념을 학습합니다',
+    sections: sections(['프로세스 생명주기','CPU 스케줄링','프로세스 동기화','교착상태 (Deadlock)','메모리 계층 구조','페이징과 세그멘테이션','가상 메모리'], 2, [90, 85]) },
+  { courseId: 2, code: 'NETWORK', name: '네트워크',
+    description: 'OSI 7계층부터 TCP/IP, HTTP까지 네트워크 전반을 다룹니다',
+    sections: sections(['OSI 7계층 모델','TCP와 UDP','IP 주소와 라우팅','HTTP와 HTTPS','DNS 동작 원리','소켓 프로그래밍'], 1, [95]) },
+  { courseId: 3, code: 'DB', name: '데이터베이스',
+    description: '정규화, 인덱스, 트랜잭션과 SQL 실무 개념을 학습합니다',
+    sections: sections(['관계형 모델과 키','정규화','SQL 기본 문법','조인과 서브쿼리','인덱스와 실행계획','트랜잭션과 격리수준'], 3, [100, 90, 80]) },
+  { courseId: 4, code: 'ALGORITHM', name: '알고리즘과 자료구조',
+    description: '자료구조와 알고리즘을 시간 복잡도 관점에서 학습합니다',
+    sections: sections(['배열과 연결 리스트','스택과 큐','트리와 힙','해시 테이블','정렬 알고리즘','탐색 알고리즘','동적 계획법'], 0) },
+  { courseId: 5, code: 'COMPUTER_ARCH', name: '컴퓨터 구조',
+    description: 'CPU, 캐시, 파이프라인 등 컴퓨터 구조의 기본기를 다집니다',
+    sections: sections(['CPU와 명령어 사이클','메모리 계층과 캐시','파이프라인','입출력과 인터럽트'], 0) },
+  { courseId: 6, code: 'JAVA_SPRING', name: 'Java와 Spring',
+    description: 'JVM부터 Spring Boot, JPA까지 백엔드 핵심을 학습합니다',
+    sections: sections(['JVM과 메모리 구조','객체지향과 SOLID','Spring DI와 IoC','Spring MVC','JPA와 영속성 컨텍스트','트랜잭션 관리'], 2, [85, 75]) },
+  { courseId: 7, code: 'NODEJS', name: 'Node.js',
+    description: '이벤트 루프와 비동기 처리, Express 기반 서버 개발을 학습합니다',
+    sections: sections(['이벤트 루프','비동기와 Promise','모듈 시스템','Express 라우팅'], 0) },
+  { courseId: 8, code: 'PYTHON', name: 'Python',
+    description: '파이썬 문법과 표준 라이브러리, 실무 활용 패턴을 학습합니다',
+    sections: sections(['자료형과 컬렉션','함수와 스코프','클래스와 상속','예외 처리','제너레이터와 데코레이터'], 0) },
+  { courseId: 9, code: 'REACT', name: '프론트엔드 React',
+    description: '컴포넌트, 훅, 상태 관리까지 React의 핵심을 학습합니다',
+    sections: sections(['JSX와 컴포넌트','Props와 State','useEffect와 생명주기','커스텀 훅','상태 관리 라이브러리','렌더링 최적화'], 1, [88]) },
+  { courseId: 10, code: 'WEB_BASIC', name: '웹 기초',
+    description: 'HTML/CSS/JS와 브라우저 렌더링 과정을 이해합니다',
+    sections: sections(['HTML 시맨틱 태그','CSS 레이아웃','자바스크립트 기초','브라우저 렌더링 과정'], 0) },
+  { courseId: 11, code: 'KOTLIN', name: 'Kotlin',
+    description: '코틀린 문법과 코루틴, 안드로이드 활용을 학습합니다',
+    sections: sections(['기본 문법과 null 안정성','확장 함수','코루틴 기초','안드로이드 연동'], 0) },
+  { courseId: 12, code: 'DEVOPS', name: '인프라와 DevOps',
+    description: 'Docker, CI/CD, 배포 파이프라인 전반을 학습합니다',
+    sections: sections(['컨테이너와 Docker','이미지와 레지스트리','CI/CD 파이프라인','무중단 배포','모니터링과 로깅'], 1, [92]) },
+  { courseId: 13, code: 'LINUX', name: 'Linux',
+    description: '리눅스 명령어, 권한, 프로세스 관리를 학습합니다',
+    sections: sections(['파일 시스템 구조','기본 명령어','권한과 소유권','프로세스와 시그널','쉘 스크립트'], 0) },
+  { courseId: 14, code: 'GIT', name: 'Git과 협업',
+    description: '브랜치 전략과 충돌 해결, 협업 워크플로를 학습합니다',
+    sections: sections(['Git 기본 개념','브랜치와 병합','충돌 해결','브랜치 전략','Pull Request 워크플로'], 2, [100, 95]) },
+  { courseId: 15, code: 'DESIGN_PATTERN', name: '디자인 패턴',
+    description: 'GoF 디자인 패턴을 실제 코드 관점에서 학습합니다',
+    sections: sections(['생성 패턴','구조 패턴','행위 패턴','안티 패턴'], 0) },
+  { courseId: 16, code: 'SECURITY', name: '정보보안 기초',
+    description: '인증/인가, 암호화, 웹 취약점의 기본을 학습합니다',
+    sections: sections(['인증과 인가','대칭키와 공개키','해시와 전자서명','웹 취약점 (XSS, CSRF)','JWT와 세션'], 0) },
+  { courseId: 17, code: 'CERT_SQLD', name: 'SQLD',
+    description: 'SQL 개발자 자격증 대비 핵심 개념을 정리합니다',
+    sections: sections(['데이터 모델링의 이해','SQL 기본','SQL 활용','SQL 최적화 기본 원리'], 0) },
+  { courseId: 18, code: 'CERT_EIP', name: '정보처리기사',
+    description: '정보처리기사 필기 핵심 주제를 정리합니다',
+    sections: sections(['소프트웨어 설계','소프트웨어 개발','데이터베이스 구축','프로그래밍 언어 활용','정보시스템 구축관리'], 0) },
+];
+
+/* =============================================================================
+   목업 데이터 — 문제 은행
+   원본: features/quiz/data/quizQuestionData.ts (해설은 데모용으로 추가)
+   ============================================================================= */
+const QUESTIONS = [
+  // ---- 단일선택 -----------------------------------------------------------
+  { id: 'sc-001', type: 'single-choice', code: 'OS', category: 'OS', difficulty: 'Easy',
+    question: '프로세스와 스레드의 차이점으로 올바른 것은?',
+    options: [
+      { id: 'a', text: '프로세스는 스레드보다 가볍다' },
+      { id: 'b', text: '스레드는 프로세스 내에서 메모리를 공유한다' },
+      { id: 'c', text: '하나의 프로세스는 하나의 스레드만 가질 수 있다' },
+      { id: 'd', text: '프로세스 간 통신이 스레드 간 통신보다 빠르다' },
+    ],
+    correctAnswer: 'b',
+    explanation: '스레드는 같은 프로세스의 코드/데이터/힙 영역을 공유하고 스택과 레지스터만 별도로 가집니다. 그래서 문맥 교환 비용이 프로세스보다 작습니다.' },
+
+  { id: 'sc-002', type: 'single-choice', code: 'NETWORK', category: 'Network', difficulty: 'Easy',
+    question: 'TCP와 UDP의 차이점으로 올바른 것은?',
+    options: [
+      { id: 'a', text: 'TCP는 비연결형이고, UDP는 연결형이다' },
+      { id: 'b', text: 'TCP는 신뢰성 있는 전송을 보장하고, UDP는 보장하지 않는다' },
+      { id: 'c', text: 'UDP가 TCP보다 느리다' },
+      { id: 'd', text: 'TCP는 브로드캐스트를 지원한다' },
+    ],
+    correctAnswer: 'b',
+    explanation: 'TCP는 연결형으로 순서 보장과 재전송을 제공합니다. UDP는 비연결형이라 오버헤드가 작은 대신 신뢰성을 보장하지 않습니다.' },
+
+  { id: 'sc-003', type: 'single-choice', code: 'DB', category: 'DB', difficulty: 'Easy',
+    question: '관계형 데이터베이스에서 기본키(Primary Key)의 특징이 아닌 것은?',
+    options: [
+      { id: 'a', text: 'NULL 값을 허용하지 않는다' },
+      { id: 'b', text: '중복된 값을 허용하지 않는다' },
+      { id: 'c', text: '테이블당 여러 개를 가질 수 있다' },
+      { id: 'd', text: '행을 고유하게 식별한다' },
+    ],
+    correctAnswer: 'c',
+    explanation: '기본키는 테이블당 하나만 존재합니다. 여러 컬럼을 묶은 복합키도 결국 하나의 기본키입니다.' },
+
+  { id: 'sc-004', type: 'single-choice', code: 'ALGORITHM', category: 'DataStructure', difficulty: 'Easy',
+    question: '스택(Stack) 자료구조의 특징은?',
+    options: [
+      { id: 'a', text: 'FIFO (First In First Out)' },
+      { id: 'b', text: 'LIFO (Last In First Out)' },
+      { id: 'c', text: '랜덤 접근이 가능하다' },
+      { id: 'd', text: '양쪽 끝에서 삽입/삭제가 가능하다' },
+    ],
+    correctAnswer: 'b',
+    explanation: '스택은 마지막에 넣은 데이터가 가장 먼저 나오는 LIFO 구조입니다. 함수 호출 스택이 대표적인 예입니다.' },
+
+  { id: 'sc-005', type: 'single-choice', code: 'OS', category: 'OS', difficulty: 'Medium',
+    question: '교착상태(Deadlock)의 필요조건이 아닌 것은?',
+    options: [
+      { id: 'a', text: '상호 배제 (Mutual Exclusion)' },
+      { id: 'b', text: '점유와 대기 (Hold and Wait)' },
+      { id: 'c', text: '선점 (Preemption)' },
+      { id: 'd', text: '순환 대기 (Circular Wait)' },
+    ],
+    correctAnswer: 'c',
+    explanation: '교착상태의 네 가지 조건은 상호 배제, 점유와 대기, 비선점(Non-preemption), 순환 대기입니다. 선점이 아니라 비선점이 조건입니다.' },
+
+  { id: 'sc-006', type: 'single-choice', code: 'NETWORK', category: 'Network', difficulty: 'Easy',
+    question: 'HTTP 상태 코드 404는 무엇을 의미하나요?',
+    options: [
+      { id: 'a', text: '서버 내부 오류' },
+      { id: 'b', text: '리소스를 찾을 수 없음' },
+      { id: 'c', text: '인증 필요' },
+      { id: 'd', text: '요청 성공' },
+    ],
+    correctAnswer: 'b',
+    explanation: '4xx는 클라이언트 오류입니다. 404 Not Found는 요청한 리소스가 서버에 없다는 뜻입니다.' },
+
+  { id: 'sc-007', type: 'single-choice', code: 'DB', category: 'DB', difficulty: 'Easy',
+    question: 'SQL에서 중복을 제거하고 데이터를 조회하는 키워드는?',
+    options: [
+      { id: 'a', text: 'UNIQUE' },
+      { id: 'b', text: 'DISTINCT' },
+      { id: 'c', text: 'DIFFERENT' },
+      { id: 'd', text: 'SINGLE' },
+    ],
+    correctAnswer: 'b',
+    explanation: 'SELECT DISTINCT는 결과 집합에서 중복 행을 제거합니다. UNIQUE는 제약조건이지 조회 키워드가 아닙니다.' },
+
+  { id: 'sc-008', type: 'single-choice', code: 'ALGORITHM', category: 'DataStructure', difficulty: 'Easy',
+    question: '이진 탐색(Binary Search)의 시간 복잡도는?',
+    options: [
+      { id: 'a', text: 'O(n)' },
+      { id: 'b', text: 'O(n²)' },
+      { id: 'c', text: 'O(log n)' },
+      { id: 'd', text: 'O(1)' },
+    ],
+    correctAnswer: 'c',
+    explanation: '탐색 범위를 매번 절반으로 줄이므로 O(log n)입니다. 단, 배열이 정렬돼 있어야 합니다.' },
+
+  { id: 'sc-009', type: 'single-choice', code: 'OS', category: 'OS', difficulty: 'Medium',
+    question: '가상 메모리에서 페이지 폴트(Page Fault)가 발생했을 때 일어나는 일은?',
+    options: [
+      { id: 'a', text: '프로세스가 즉시 종료된다' },
+      { id: 'b', text: '운영체제가 필요한 페이지를 디스크에서 메모리로 로드한다' },
+      { id: 'c', text: 'CPU가 재부팅된다' },
+      { id: 'd', text: '모든 프로세스가 중단된다' },
+    ],
+    correctAnswer: 'b',
+    explanation: '페이지 폴트는 오류가 아니라 정상 동작입니다. OS가 트랩을 받아 해당 페이지를 스왑 영역에서 물리 메모리로 올린 뒤 명령을 재실행합니다.' },
+
+  { id: 'sc-010', type: 'single-choice', code: 'NETWORK', category: 'Network', difficulty: 'Medium',
+    question: 'OSI 7계층에서 라우터가 동작하는 계층은?',
+    options: [
+      { id: 'a', text: '물리 계층' },
+      { id: 'b', text: '데이터 링크 계층' },
+      { id: 'c', text: '네트워크 계층' },
+      { id: 'd', text: '전송 계층' },
+    ],
+    correctAnswer: 'c',
+    explanation: '라우터는 IP 주소를 보고 경로를 결정하므로 3계층(네트워크) 장비입니다. 스위치는 2계층에서 MAC 주소를 다룹니다.' },
+
+  { id: 'sc-011', type: 'single-choice', code: 'JAVA_SPRING', category: 'Spring', difficulty: 'Medium',
+    question: 'Spring의 의존성 주입(DI)을 사용하는 가장 큰 이유는?',
+    options: [
+      { id: 'a', text: '코드 실행 속도가 빨라지기 때문' },
+      { id: 'b', text: '객체 간 결합도를 낮춰 교체와 테스트가 쉬워지기 때문' },
+      { id: 'c', text: '메모리 사용량이 줄어들기 때문' },
+      { id: 'd', text: '컴파일 오류를 없애주기 때문' },
+    ],
+    correctAnswer: 'b',
+    explanation: '구현체를 직접 new 하지 않고 외부에서 주입받으면 인터페이스에만 의존하게 됩니다. 테스트에서 목 객체로 교체하기도 쉬워집니다.' },
+
+  { id: 'sc-012', type: 'single-choice', code: 'JAVA_SPRING', category: 'Spring', difficulty: 'Hard',
+    question: 'JPA 영속성 컨텍스트의 1차 캐시에 대한 설명으로 올바른 것은?',
+    options: [
+      { id: 'a', text: '애플리케이션 전체가 공유하는 전역 캐시다' },
+      { id: 'b', text: '트랜잭션 단위로 관리되며 같은 식별자 조회 시 DB를 다시 조회하지 않는다' },
+      { id: 'c', text: '캐시된 엔티티는 변경해도 DB에 반영되지 않는다' },
+      { id: 'd', text: 'Redis를 설정해야만 동작한다' },
+    ],
+    correctAnswer: 'b',
+    explanation: '1차 캐시는 EntityManager(트랜잭션) 범위입니다. 같은 ID를 다시 조회하면 캐시에서 반환하고, 커밋 시점에 변경 감지로 UPDATE가 나갑니다.' },
+
+  { id: 'sc-013', type: 'single-choice', code: 'REACT', category: 'React', difficulty: 'Medium',
+    question: 'useEffect의 의존성 배열에 빈 배열([])을 넣으면 어떻게 동작하나요?',
+    options: [
+      { id: 'a', text: '매 렌더링마다 실행된다' },
+      { id: 'b', text: '최초 마운트 시 한 번만 실행된다' },
+      { id: 'c', text: '아예 실행되지 않는다' },
+      { id: 'd', text: '언마운트 시에만 실행된다' },
+    ],
+    correctAnswer: 'b',
+    explanation: '빈 배열은 "감시할 값이 없다"는 뜻이라 마운트 시 1회만 실행됩니다. 반환한 정리 함수는 언마운트 시 호출됩니다.' },
+
+  { id: 'sc-014', type: 'single-choice', code: 'GIT', category: 'Git', difficulty: 'Medium',
+    question: 'git merge와 git rebase의 차이로 올바른 것은?',
+    options: [
+      { id: 'a', text: 'rebase는 커밋 히스토리를 선형으로 정리한다' },
+      { id: 'b', text: 'merge는 항상 충돌이 발생하지 않는다' },
+      { id: 'c', text: 'rebase는 원격 브랜치에서만 사용할 수 있다' },
+      { id: 'd', text: '둘은 완전히 동일하게 동작한다' },
+    ],
+    correctAnswer: 'a',
+    explanation: 'rebase는 커밋을 다른 베이스 위로 다시 쌓아 히스토리를 선형으로 만듭니다. 이미 공유된 브랜치에는 쓰지 않는 것이 원칙입니다.' },
+
+  { id: 'sc-015', type: 'single-choice', code: 'LINUX', category: 'Linux', difficulty: 'Easy',
+    question: '리눅스에서 파일 권한 755가 의미하는 것은?',
+    options: [
+      { id: 'a', text: '소유자 읽기/쓰기/실행, 그룹과 기타 읽기/실행' },
+      { id: 'b', text: '모든 사용자가 읽기/쓰기/실행 가능' },
+      { id: 'c', text: '소유자만 읽기 가능' },
+      { id: 'd', text: '아무도 실행할 수 없음' },
+    ],
+    correctAnswer: 'a',
+    explanation: '7=rwx, 5=r-x입니다. 즉 소유자는 읽기·쓰기·실행, 그룹과 기타 사용자는 읽기·실행만 가능합니다.' },
+
+  // ---- 다중선택 -----------------------------------------------------------
+  { id: 'mc-001', type: 'multiple-choice', code: 'OS', category: 'OS', difficulty: 'Medium',
+    question: '프로세스 스케줄링 알고리즘으로 올바른 것을 모두 고르세요.',
+    options: [
+      { id: 'a', text: 'Round Robin (RR)' },
+      { id: 'b', text: 'First Come First Served (FCFS)' },
+      { id: 'c', text: 'Quick Sort (QS)' },
+      { id: 'd', text: 'Shortest Job First (SJF)' },
+    ],
+    correctAnswer: ['a', 'b', 'd'],
+    explanation: 'Quick Sort는 정렬 알고리즘이지 스케줄링 알고리즘이 아닙니다. 나머지 셋은 대표적인 CPU 스케줄링 기법입니다.' },
+
+  { id: 'mc-002', type: 'multiple-choice', code: 'NETWORK', category: 'Network', difficulty: 'Easy',
+    question: 'HTTP 메서드 중 CRUD 작업과 관련된 것을 모두 고르세요.',
+    options: [
+      { id: 'a', text: 'GET' },
+      { id: 'b', text: 'POST' },
+      { id: 'c', text: 'CONNECT' },
+      { id: 'd', text: 'DELETE' },
+    ],
+    correctAnswer: ['a', 'b', 'd'],
+    explanation: 'CONNECT는 프록시 터널을 여는 메서드로 CRUD와 무관합니다.' },
+
+  { id: 'mc-003', type: 'multiple-choice', code: 'DB', category: 'DB', difficulty: 'Medium',
+    question: 'SQL의 DML(Data Manipulation Language)에 해당하는 것을 모두 고르세요.',
+    options: [
+      { id: 'a', text: 'SELECT' },
+      { id: 'b', text: 'INSERT' },
+      { id: 'c', text: 'CREATE' },
+      { id: 'd', text: 'UPDATE' },
+    ],
+    correctAnswer: ['a', 'b', 'd'],
+    explanation: 'CREATE는 구조를 정의하는 DDL입니다. DML은 데이터 자체를 다루는 SELECT·INSERT·UPDATE·DELETE입니다.' },
+
+  { id: 'mc-004', type: 'multiple-choice', code: 'ALGORITHM', category: 'DataStructure', difficulty: 'Medium',
+    question: '평균 시간 복잡도가 O(n log n)인 정렬 알고리즘을 모두 고르세요.',
+    options: [
+      { id: 'a', text: '병합 정렬 (Merge Sort)' },
+      { id: 'b', text: '버블 정렬 (Bubble Sort)' },
+      { id: 'c', text: '퀵 정렬 (Quick Sort)' },
+      { id: 'd', text: '힙 정렬 (Heap Sort)' },
+    ],
+    correctAnswer: ['a', 'c', 'd'],
+    explanation: '버블 정렬은 평균과 최악 모두 O(n²)입니다. 퀵 정렬은 평균 O(n log n)이지만 최악은 O(n²)라는 점도 함께 기억해두세요.' },
+
+  { id: 'mc-005', type: 'multiple-choice', code: 'SECURITY', category: 'Security', difficulty: 'Medium',
+    question: '서버에서 반드시 검증해야 하는 값을 모두 고르세요.',
+    options: [
+      { id: 'a', text: '클라이언트가 보낸 채점 결과' },
+      { id: 'b', text: '클라이언트가 보낸 상품 가격' },
+      { id: 'c', text: '클라이언트가 보낸 사용자 권한' },
+      { id: 'd', text: '서버가 직접 계산한 세션 만료 시각' },
+    ],
+    correctAnswer: ['a', 'b', 'c'],
+    explanation: '클라이언트에서 온 값은 전부 조작 가능하다고 가정해야 합니다. 서버가 직접 만든 값만 신뢰할 수 있습니다.' },
+
+  // ---- 단답형 -------------------------------------------------------------
+  { id: 'sa-001', type: 'short-answer', code: 'ALGORITHM', category: 'DataStructure', difficulty: 'Easy',
+    question: 'LIFO 구조를 가진 자료구조의 이름을 영어로 작성하세요.',
+    correctAnswer: 'stack',
+    explanation: 'Stack. 후입선출 구조로, 함수 호출 스택과 괄호 검사 등에 쓰입니다.' },
+
+  { id: 'sa-002', type: 'short-answer', code: 'NETWORK', category: 'Network', difficulty: 'Medium',
+    question: 'TCP의 3-way handshake에서 클라이언트가 처음 보내는 패킷의 이름을 영어로 작성하세요.',
+    correctAnswer: 'syn',
+    explanation: 'SYN → SYN+ACK → ACK 순서로 연결이 수립됩니다.' },
+
+  { id: 'sa-003', type: 'short-answer', code: 'DB', category: 'DB', difficulty: 'Easy',
+    question: 'SQL에서 조건을 지정할 때 사용하는 키워드를 작성하세요.',
+    correctAnswer: 'where',
+    explanation: 'WHERE 절은 행을 필터링합니다. 그룹화 이후 조건은 HAVING을 사용합니다.' },
+
+  { id: 'sa-004', type: 'short-answer', code: 'OS', category: 'OS', difficulty: 'Easy',
+    question: '운영체제에서 실행 중인 프로그램을 무엇이라고 하나요? (영어로 작성)',
+    correctAnswer: 'process',
+    explanation: 'Process. 디스크에 저장된 프로그램이 메모리에 올라가 실행되는 상태를 말합니다.' },
+
+  { id: 'sa-005', type: 'short-answer', code: 'NETWORK', category: 'Network', difficulty: 'Easy',
+    question: 'HTTP의 기본 포트 번호를 숫자로 작성하세요.',
+    correctAnswer: '80',
+    explanation: 'HTTP는 80번, HTTPS는 443번이 기본 포트입니다.' },
+
+  { id: 'sa-006', type: 'short-answer', code: 'DB', category: 'DB', difficulty: 'Medium',
+    question: '데이터베이스에서 테이블 간의 관계를 정의할 때 사용하는 키의 이름은? (영어로 작성)',
+    correctAnswer: 'foreign key',
+    explanation: 'Foreign Key. 다른 테이블의 기본키를 참조해 참조 무결성을 보장합니다.' },
+
+  { id: 'sa-007', type: 'short-answer', code: 'ALGORITHM', category: 'DataStructure', difficulty: 'Easy',
+    question: 'FIFO 구조를 가진 자료구조의 이름을 영어로 작성하세요.',
+    correctAnswer: 'queue',
+    explanation: 'Queue. 먼저 들어온 데이터가 먼저 나가며, BFS와 작업 대기열에 쓰입니다.' },
+
+  { id: 'sa-008', type: 'short-answer', code: 'OS', category: 'OS', difficulty: 'Medium',
+    question: '프로세스가 CPU를 기다리는 상태를 무엇이라고 하나요? (영어로 작성)',
+    correctAnswer: 'ready',
+    explanation: 'Ready 상태입니다. 실행에 필요한 모든 자원을 확보하고 CPU 할당만 기다리는 상태입니다.' },
+
+  { id: 'sa-009', type: 'short-answer', code: 'JAVA_SPRING', category: 'Spring', difficulty: 'Medium',
+    question: 'Spring에서 트랜잭션을 선언적으로 적용할 때 사용하는 어노테이션 이름은? (@ 제외, 영어로 작성)',
+    correctAnswer: 'transactional',
+    explanation: '@Transactional. AOP 프록시로 동작하기 때문에 같은 클래스 내부 호출에는 적용되지 않는 점을 주의해야 합니다.' },
+
+  { id: 'sa-010', type: 'short-answer', code: 'REACT', category: 'React', difficulty: 'Easy',
+    question: 'React에서 리스트를 렌더링할 때 각 항목에 지정해야 하는 특별한 prop의 이름은?',
+    correctAnswer: 'key',
+    explanation: 'key는 React가 어떤 항목이 바뀌었는지 식별하는 데 쓰입니다. 배열 인덱스를 key로 쓰면 순서가 바뀔 때 문제가 생길 수 있습니다.' },
+];
+
+/* =============================================================================
+   "서버" — 채점은 전적으로 이쪽에서 수행한다
+   원본 설계: 클라이언트는 선택한 답안 값만 보내고,
+   서버가 보유한 정답 데이터와 문제 유형 기준으로 직접 채점한다.
+   ============================================================================= */
+const server = {
+  /**
+   * 답안 제출 — 클라이언트는 isCorrect를 보내지 않는다.
+   * @param questionId 문제 ID
+   * @param submitted  사용자가 선택/입력한 값 (string | string[])
+   */
+  submitAnswer: function (questionId, submitted) {
+    const q = QUESTIONS.find(function (x) { return x.id === questionId; });
+    if (!q) return { isCorrect: false, correctAnswer: '', explanation: '' };
+
+    let isCorrect = false;
+
+    if (q.type === 'multiple-choice') {
+      // 다중선택: 순서 무관 비교를 위해 Set으로 파싱해서 대조
+      const sub = new Set(Array.isArray(submitted) ? submitted : []);
+      const ans = new Set(q.correctAnswer);
+      isCorrect = sub.size === ans.size &&
+        Array.from(ans).every(function (id) { return sub.has(id); });
+    } else if (q.type === 'short-answer') {
+      // 단답형: 대소문자/앞뒤 공백 무시
+      const sub = String(submitted || '').trim().toLowerCase();
+      isCorrect = sub.length > 0 && sub === String(q.correctAnswer).toLowerCase();
+    } else {
+      // 단일선택
+      isCorrect = submitted === q.correctAnswer;
+    }
+
+    return {
+      isCorrect: isCorrect,
+      correctAnswer: formatCorrectAnswer(q),
+      explanation: q.explanation,
+    };
+  },
+};
+
+function formatCorrectAnswer(q) {
+  if (q.type === 'short-answer') return q.correctAnswer;
+  const ids = Array.isArray(q.correctAnswer) ? q.correctAnswer : [q.correctAnswer];
+  return ids.map(function (id) {
+    const opt = (q.options || []).find(function (o) { return o.id === id; });
+    return opt ? opt.text : id;
+  }).join(', ');
+}
+
+/* =============================================================================
+   상태
+   ============================================================================= */
+const state = {
+  screen: 'game',
+  filter: 'All',
+  courseId: null,
+  sectionNumber: null,
+  limit: 10,
+  showLimitModal: false,
+  pendingSection: null,
+
+  // 세션
+  queue: [],
+  index: 0,          // 현재 문제 위치 — "다음 문제"에서만 전진 (forward-only)
+  answer: null,
+  solvedCount: 0,
+  correctCount: 0,
+  responseTimes: [],
+  isSubmitting: false,
+  showFeedback: false,
+  feedbackData: null,
+  showSkipConfirm: false,
+  summary: null,
+
+  toast: null,
+};
+
+// FSRS 타이밍: 문제 렌더링 시점부터 제출까지의 시간
+const timer = {
+  startedAt: 0,
+  pausedAt: 0,
+  pausedTotal: 0,
+  start: function () { this.startedAt = Date.now(); this.pausedTotal = 0; this.pausedAt = 0; },
+  pause: function () { if (!this.pausedAt) this.pausedAt = Date.now(); },
+  resume: function () {
+    if (this.pausedAt) { this.pausedTotal += Date.now() - this.pausedAt; this.pausedAt = 0; }
+  },
+  stop: function () {
+    this.resume();
+    return Math.max(0, Date.now() - this.startedAt - this.pausedTotal);
+  },
+};
+
+const app = document.getElementById('app');
+const routeLabel = document.getElementById('routeLabel');
+
+function getCourse(id) {
+  return COURSES.find(function (c) { return c.courseId === id; });
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function showToast(msg) {
+  state.toast = msg;
+  render();
+  setTimeout(function () { state.toast = null; render(); }, 2200);
+}
+
+/* =============================================================================
+   네비게이션
+   ============================================================================= */
+function go(screen, opts) {
+  opts = opts || {};
+  state.screen = screen;
+  if (opts.courseId !== undefined) state.courseId = opts.courseId;
+  if (opts.sectionNumber !== undefined) state.sectionNumber = opts.sectionNumber;
+  window.scrollTo(0, 0);
+  render();
+}
+
+function routeString() {
+  switch (state.screen) {
+    case 'game': return '/quiz';
+    case 'courses': return '/quiz-practice';
+    case 'detail': return '/quiz-practice/' + state.courseId;
+    case 'session':
+    case 'complete': return '/continuous-quiz/' + state.courseId + '/section/' + state.sectionNumber;
+    case 'commentle': return '/quiz-commentle';
+    case 'contest': return '/quiz-contest';
+    default: return '/quiz';
+  }
+}
+
+/* =============================================================================
+   화면 1 — QuizGameSelection (/quiz)
+   ============================================================================= */
+const GAMES = [
+  { id: 'commentle', title: 'COMMENTLE', subtitle: 'AI 시맨틱 단어 퀴즈',
+    description: 'S-ROBERTA 임베딩 기술로 CS 용어를 추론하는 미스터리 섬!',
+    iconName: 'terminal', tag: '인기', glow: 'rgba(59, 130, 246, 0.4)' },
+  { id: 'contest', title: 'QUIZ CONTEST', subtitle: '실시간 온라인 대전',
+    description: '전국의 팀과 실시간 지력 대결! 명예를 쟁취하세요!',
+    iconName: 'trophy', tag: '준비중', glow: 'rgba(34, 197, 94, 0.4)' },
+  { id: 'practice', title: 'PRACTICE MODE', subtitle: '개인 훈련소',
+    description: 'CS 핵심 개념을 반복 학습하는 수련의 섬!',
+    iconName: 'dumbbell', tag: null, glow: 'rgba(250, 204, 21, 0.5)' },
+];
+
+function bubbleSet(scale, left) {
+  let html = '<div class="bubble-container" style="transform:scale(' + scale + ');' +
+    (left ? 'left:' + left + ';' : '') + '">';
+  for (let i = 1; i <= 8; i++) html += '<span class="bubble bubble-' + i + '"></span>';
+  return html + '</div>';
+}
+
+function renderGameSelection() {
+  let cards = '';
+  GAMES.forEach(function (g, i) {
+    let fx = '';
+    if (g.id === 'commentle') {
+      fx = '<div class="gc-terminal"><span style="opacity:.6">&gt; </span>' +
+        '<span id="typingText"></span><span class="typing-cursor"></span></div>';
+    } else if (g.id === 'contest') {
+      fx = '<div class="gc-versus">' +
+        '<div class="fighter-left"><div class="gc-fighter gc-fighter-p1">P1</div></div>' +
+        '<div class="vs-pulse gc-vs">VS</div>' +
+        '<div class="fighter-right"><div class="gc-fighter gc-fighter-p2">P2</div></div>' +
+        '</div>';
+    } else {
+      fx = '<div style="width:100%">' +
+        '<div class="gc-progress-label"><span>학습 진행률</span>' +
+        '<span class="progress-bar-pulse">탐험 중...</span></div>' +
+        '<div class="gc-progress-track"><div class="gc-progress-fill progress-bar-animated"></div></div>' +
+        '</div>';
+    }
+
+    cards +=
+      '<button class="game-card gc-' + g.id + '" data-game="' + g.id + '" ' +
+        'style="animation-delay:' + (i * 150) + 'ms" data-glow="' + g.glow + '">' +
+        '<div class="gc-sparkle">' + icon('sparkles', 20, '#FBBF24') + '</div>' +
+        '<div class="gc-tagrow">' +
+          (g.tag ? '<span class="gc-tag ' + (g.tag === '인기' ? 'gc-tag-hot' : 'gc-tag-soon') + '">' + g.tag + '</span>' : '') +
+        '</div>' +
+        '<div class="gc-icon gc-icon-' + g.id + '">' + icon(g.iconName, 32, '#fff') + '</div>' +
+        '<div class="gc-body">' +
+          '<h2 class="gc-name">' + g.title + '</h2>' +
+          '<p class="gc-subtitle gc-sub-' + g.id + '">' + g.subtitle + '</p>' +
+          '<p class="gc-desc">' + g.description + '</p>' +
+          '<div class="gc-fx">' + fx + '</div>' +
+          '<div style="flex-grow:1"></div>' +
+        '</div>' +
+        '<div class="gc-footer"><span>탐험하기</span>' +
+          '<span class="gc-arrow">' + icon('arrowRight', 18) + '</span></div>' +
+      '</button>';
+  });
+
+  return '' +
+    '<div class="screen game-screen"><div class="wrap-7xl">' +
+      '<header class="game-header">' +
+        bubbleSet(3) + bubbleSet(2.5, '20%') + bubbleSet(2, '60%') +
+        '<div class="game-header-row">' +
+          '<div>' +
+            '<div class="game-eyebrow">' + icon('sparkles', 14) + 'Treasure Island Adventure</div>' +
+            '<h1 class="game-title">SQUIZ 아일랜드 🏝️</h1>' +
+            '<p class="game-sub">퀴즈를 세 가지 모드로 즐겨보세요!</p>' +
+          '</div>' +
+          '<div class="mascot-slot">' + mascotHtml(130) + '</div>' +
+        '</div>' +
+      '</header>' +
+      '<div class="game-grid">' + cards + '</div>' +
+    '</div></div>';
+}
+
+function mascotHtml(size) {
+  const eye = size * 0.08;
+  function pupil(cx) {
+    return '<div class="pupil" data-pupil style="width:' + eye + 'px;height:' + eye + 'px;' +
+      'left:' + (cx - eye / 2) + 'px;top:' + (size * 0.32 - eye / 2) + 'px">' +
+      '<span class="hl" style="width:' + (eye * 0.3) + 'px;height:' + (eye * 0.3) + 'px;top:18%;left:22%;opacity:.9"></span>' +
+      '<span class="hl" style="width:' + (eye * 0.15) + 'px;height:' + (eye * 0.15) + 'px;top:55%;left:55%;opacity:.5"></span>' +
+      '</div>';
+  }
+  return '<div class="mascot" id="mascot" style="width:' + size + 'px;height:' + size + 'px">' +
+    '<img src="images/squiz-dolphin.png" alt="SQUIZ 마스코트" draggable="false" />' +
+    pupil(size * 0.4) + pupil(size * 0.6) +
+    '</div>';
+}
+
+/* =============================================================================
+   화면 2 — QuizCourseList (/quiz-practice)
+   ============================================================================= */
+const FILTER_OPTIONS = ['All', 'CSFundamentals', 'Backend', 'Frontend', 'Infrastructure', 'Design', 'Certification'];
+
+function renderCourseList() {
+  const filtered = state.filter === 'All'
+    ? COURSES
+    : COURSES.filter(function (c) { return CODE_TO_FILTER_CATEGORY[c.code] === state.filter; });
+
+  let filters = '<span style="color:var(--color-text-tertiary);margin-right:8px;display:inline-flex">' +
+    icon('filter', 18) + '</span>';
+
+  FILTER_OPTIONS.forEach(function (opt) {
+    const active = state.filter === opt;
+    const cfg = opt !== 'All' ? FILTER_CATEGORY_CONFIG[opt] : null;
+    const color = cfg ? cfg.color : 'var(--color-primary)';
+    const style = active
+      ? 'border-color:' + color + ';background:color-mix(in srgb, ' + color + ' 15%, transparent);color:' + color + ';'
+      : '';
+    filters += '<button class="filter-btn" data-filter="' + opt + '" style="' + style + '">' +
+      (opt === 'All' ? '전체 코스' : cfg.label) + '</button>';
+  });
+
+  let grid = '';
+  filtered.forEach(function (c) {
+    const cfg = CATEGORY_CONFIG[c.code] || { label: '기타', color: '#9CA3AF' };
+    grid +=
+      '<button class="course-card" data-course="' + c.courseId + '">' +
+        '<div class="cc-top">' +
+          '<div class="cc-icon" style="background:' + cfg.color + '">' + icon('bookOpen', 24, '#fff') + '</div>' +
+          '<span class="cc-badge" style="background:color-mix(in srgb, ' + cfg.color + ' 15%, transparent);color:' + cfg.color + '">' +
+            esc(cfg.label) + '</span>' +
+        '</div>' +
+        '<h3 class="cc-title">' + esc(c.name) + '</h3>' +
+        '<p class="cc-desc">' + esc(c.description) + '</p>' +
+      '</button>';
+  });
+
+  return '' +
+    '<div class="screen list-screen"><div class="wrap-6xl">' +
+      '<div class="page-nav">' +
+        '<div class="breadcrumb">' +
+          '<a data-nav="game">퀴즈</a><span class="sep">/</span><span class="current">퀴즈 연습</span>' +
+        '</div>' +
+        '<div class="page-nav-row">' +
+          '<button class="btn btn-ghost btn-sm" data-nav="game">' + icon('arrowLeft', 18) + '</button>' +
+          '<h1 class="page-nav-title">퀴즈 연습</h1>' +
+        '</div>' +
+      '</div>' +
+      '<div class="filter-row">' + filters + '</div>' +
+      (filtered.length
+        ? '<div class="course-grid">' + grid + '</div>'
+        : '<div class="empty-state">해당 카테고리의 코스가 없습니다.</div>') +
+      (filtered.length
+        ? '<div class="info-footer"><p><strong>Tip:</strong> 코스를 클릭하면 원하는 섹션의 문제를 풀 수 있습니다!</p></div>'
+        : '') +
+    '</div></div>';
+}
+
+/* =============================================================================
+   화면 3 — CourseDetail (/quiz-practice/:courseId)
+   ============================================================================= */
+function renderCourseDetail() {
+  const course = getCourse(state.courseId);
+  if (!course) return renderCourseList();
+  const cfg = CATEGORY_CONFIG[course.code] || { label: '기타', color: '#9CA3AF' };
+
+  let rows = '';
+  course.sections.forEach(function (s) {
+    const completed = s.isPassed;
+    rows +=
+      '<button class="section-row" data-section="' + s.sectionNumber + '">' +
+        '<div class="sr-icon" style="background:' + (completed ? 'var(--color-google-green)' : cfg.color) + '">' +
+          (completed ? icon('checkCircle', 20, '#fff') : icon('play', 18, '#fff', '#fff')) +
+        '</div>' +
+        '<div class="sr-body">' +
+          '<span class="sr-num">Section ' + s.sectionNumber + '</span>' +
+          '<div class="sr-name" style="' +
+            (completed
+              ? 'color:var(--color-text-secondary);text-decoration:line-through'
+              : 'color:var(--color-text-primary)') + '">' + esc(s.name) + '</div>' +
+        '</div>' +
+        (completed && s.bestScore !== null
+          ? '<div class="sr-score">' + icon('trophy', 14, 'var(--color-google-green)') +
+            '<span>' + s.bestScore + '점</span></div>'
+          : '<span class="sr-start" style="background:' + cfg.color + '">시작</span>') +
+      '</button>';
+  });
+
+  return '' +
+    '<div class="screen list-screen"><div class="wrap-4xl">' +
+      '<div class="page-nav">' +
+        '<div class="breadcrumb">' +
+          '<a data-nav="game">퀴즈</a><span class="sep">/</span>' +
+          '<a data-nav="courses">퀴즈 연습</a><span class="sep">/</span>' +
+          '<span class="current">' + esc(course.name) + '</span>' +
+        '</div>' +
+        '<div class="page-nav-row">' +
+          '<button class="btn btn-ghost btn-sm" data-nav="courses">' + icon('arrowLeft', 18) + '</button>' +
+          '<h1 class="page-nav-title">' + esc(course.name) + '</h1>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="detail-header-wrap"><div class="detail-header-card">' +
+        '<div class="flex items-start justify-between mb-4">' +
+          '<div class="dh-icon" style="background:' + cfg.color + '">' + icon('bookOpen', 28, '#fff') + '</div>' +
+          '<span class="dh-badge" style="background:color-mix(in srgb, ' + cfg.color + ' 15%, transparent);color:' + cfg.color + '">' +
+            esc(cfg.label) + '</span>' +
+        '</div>' +
+        '<h1 class="dh-title">' + esc(course.name) + '</h1>' +
+        '<p class="dh-desc">' + course.sections.length + '개의 섹션으로 구성된 코스입니다</p>' +
+      '</div></div>' +
+
+      '<div class="section-list">' +
+        '<div class="section-list-head"><h2>섹션 목록</h2></div>' +
+        '<div>' + rows + '</div>' +
+      '</div>' +
+
+      '<div class="info-footer"><p><strong>💡 Tip:</strong> 원하는 섹션부터 <strong>자유롭게 학습</strong>하세요!<br />' +
+        '학습한 내용은 잊어버리지 않도록 제때 복습시켜 드릴게요.</p></div>' +
+    '</div>' +
+    (state.showLimitModal ? renderLimitModal() : '') +
+    '</div>';
+}
+
+function renderLimitModal() {
+  const opts = [5, 10, 20, 30, 50];
+  let btns = '';
+  opts.forEach(function (o) {
+    btns += '<button class="btn btn-sm ' + (state.limit === o ? 'btn-primary' : 'btn-outline') +
+      '" data-limit="' + o + '">' + o + '</button>';
+  });
+  return '' +
+    '<div class="overlay" data-overlay="limit"><div class="modal-panel modal-sm">' +
+      '<h3 class="modal-title">학습량 설정</h3>' +
+      '<p class="text-center" style="color:var(--color-text-secondary);margin:0 0 24px">' +
+        '이번 세션에서 풀 문제 수를 선택해주세요.</p>' +
+      '<div class="limit-grid">' + btns + '</div>' +
+      '<div class="flex gap-3" style="margin-top:24px">' +
+        '<button class="btn btn-secondary btn-md flex-1" data-limit-cancel>취소</button>' +
+        '<button class="btn btn-primary btn-md flex-1" data-limit-start>학습 시작</button>' +
+      '</div>' +
+    '</div></div>';
+}
+
+/* =============================================================================
+   화면 4 — ContinuousQuizSession
+   ============================================================================= */
+function buildQueue(course, limit) {
+  const own = QUESTIONS.filter(function (q) { return q.code === course.code; });
+  const rest = QUESTIONS.filter(function (q) { return q.code !== course.code; });
+  shuffle(own); shuffle(rest);
+  return own.concat(rest).slice(0, limit);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+function startSession(courseId, sectionNumber, limit) {
+  const course = getCourse(courseId);
+  state.queue = buildQueue(course, limit);
+  state.index = 0;
+  state.solvedCount = 0;
+  state.correctCount = 0;
+  state.responseTimes = [];
+  state.answer = null;
+  state.isSubmitting = false;
+  state.showFeedback = false;
+  state.feedbackData = null;
+  state.showSkipConfirm = false;
+  state.summary = null;
+  timer.start();
+  go('session', { courseId: courseId, sectionNumber: sectionNumber });
+}
+
+function currentQuestion() {
+  return state.queue[state.index] || null;
+}
+
+function isAnswerValid() {
+  const q = currentQuestion();
+  if (!q) return false;
+  if (q.type === 'multiple-choice') return Array.isArray(state.answer) && state.answer.length > 0;
+  if (q.type === 'short-answer') return typeof state.answer === 'string' && state.answer.trim().length > 0;
+  return !!state.answer;
+}
+
+const TYPE_LABELS = {
+  'single-choice': '단일선택',
+  'multiple-choice': '다중선택',
+  'short-answer': '단답형',
+};
+const DIFFICULTY_CHIP = {
+  Easy:   { label: '초급', bg: 'var(--color-google-green-light)',  color: 'var(--color-google-green)' },
+  Medium: { label: '중급', bg: 'var(--color-google-yellow-light)', color: 'var(--color-google-yellow)' },
+  Hard:   { label: '고급', bg: 'var(--color-google-red-light)',    color: 'var(--color-google-red)' },
+};
+
+function renderSession() {
+  const q = currentQuestion();
+  if (!q) return renderComplete();
+
+  const accuracy = state.solvedCount > 0
+    ? Math.round((state.correctCount / state.solvedCount) * 100) : 0;
+  const diff = DIFFICULTY_CHIP[q.difficulty];
+
+  // 답변 영역
+  let answerArea = '';
+  if (q.type === 'short-answer') {
+    answerArea =
+      '<div><input class="qc-input" id="shortAnswer" type="text" placeholder="답을 입력하세요..." ' +
+        'value="' + esc(typeof state.answer === 'string' ? state.answer : '') + '" autocomplete="off" />' +
+      '<p class="qc-hint">대소문자 구분 없이 정답이 채점됩니다.</p></div>';
+  } else {
+    let opts = '';
+    (q.options || []).forEach(function (o) {
+      const selected = q.type === 'single-choice'
+        ? state.answer === o.id
+        : (Array.isArray(state.answer) && state.answer.indexOf(o.id) !== -1);
+      const iconName = q.type === 'single-choice'
+        ? (selected ? 'checkCircle' : 'circle')
+        : (selected ? 'checkSquare' : 'square');
+      opts +=
+        '<button class="qc-option' + (selected ? ' selected' : '') + '" data-option="' + o.id + '">' +
+          icon(iconName, 22, selected ? 'var(--color-primary)' : 'var(--color-text-tertiary)') +
+          '<span class="label">' + esc(o.text) + '</span>' +
+        '</button>';
+    });
+    answerArea = '<div class="qc-options">' + opts + '</div>';
+  }
+
+  const submitDisabled = !isAnswerValid() || state.isSubmitting;
+
+  return '' +
+    '<div class="screen session-screen">' +
+      '<header class="session-header"><div class="session-header-inner">' +
+        '<div class="breadcrumb">' +
+          '<a data-nav="game">퀴즈</a><span class="sep">/</span><span class="current">연속 학습</span>' +
+        '</div>' +
+        '<div class="sh-row">' +
+          '<button class="btn btn-ghost btn-sm" data-session-exit>' + icon('arrowLeft', 18) + '나가기</button>' +
+          '<span class="sh-mode">연속 학습</span>' +
+        '</div>' +
+        '<div class="sh-stats">' +
+          '<span>진행: <strong style="color:var(--color-primary)">' + state.solvedCount + '</strong> / ' + state.queue.length + '</span>' +
+          '<span>정답률: <strong style="color:var(--color-success)">' + accuracy + '%</strong></span>' +
+        '</div>' +
+      '</div></header>' +
+
+      '<main class="session-main">' +
+        '<div class="question-card">' +
+          '<div class="qc-meta">' +
+            '<span class="qc-num">Q' + (state.index + 1) + '</span>' +
+            '<span class="qc-chip qc-chip-type">' + TYPE_LABELS[q.type] + '</span>' +
+            '<span class="qc-chip" style="background:' + diff.bg + ';color:' + diff.color + '">' + diff.label + '</span>' +
+            '<span class="qc-chip qc-chip-cat">' + esc(q.category) + '</span>' +
+          '</div>' +
+          '<div class="qc-question">' + esc(q.question) + '</div>' +
+          answerArea +
+          (q.type === 'multiple-choice'
+            ? '<p class="qc-hint">💡 해당하는 항목을 모두 선택하세요.</p>' : '') +
+        '</div>' +
+
+        '<div class="qc-nav">' +
+          '<button class="btn btn-ghost btn-lg" data-skip' + (state.isSubmitting ? ' disabled' : '') + '>건너뛰기</button>' +
+          '<button class="btn btn-primary btn-lg" data-submit' + (submitDisabled ? ' disabled' : '') + '>' +
+            (state.isSubmitting
+              ? '<span class="spinner"></span>채점 중...'
+              : '제출하기' + icon('send', 20, '#fff')) +
+          '</button>' +
+        '</div>' +
+      '</main>' +
+
+      (state.showFeedback && state.feedbackData ? renderFeedbackModal() : '') +
+      (state.showSkipConfirm ? renderSkipModal() : '') +
+    '</div>';
+}
+
+function renderFeedbackModal() {
+  const f = state.feedbackData;
+  return '' +
+    '<div class="overlay"><div class="modal-panel modal-md">' +
+      '<div class="fb-icon-wrap"><div class="fb-icon" style="background:' +
+        (f.isCorrect ? 'var(--color-success-light)' : 'var(--color-error-light)') + '">' +
+        (f.isCorrect
+          ? icon('checkCircle', 40, 'var(--color-success)')
+          : icon('xCircle', 40, 'var(--color-error)')) +
+      '</div></div>' +
+      '<h3 class="fb-result" style="color:' +
+        (f.isCorrect ? 'var(--color-success)' : 'var(--color-error)') + '">' +
+        (f.isCorrect ? '정답입니다!' : '오답입니다') + '</h3>' +
+      (!f.isCorrect
+        ? '<div class="fb-answer"><span class="lbl">정답:</span><p>' + esc(f.correctAnswer) + '</p></div>'
+        : '') +
+      (f.explanation ? '<div class="fb-explain">' + esc(f.explanation) + '</div>' : '') +
+      '<button class="btn btn-primary btn-lg" style="width:100%" data-continue>다음 문제</button>' +
+    '</div></div>';
+}
+
+function renderSkipModal() {
+  return '' +
+    '<div class="overlay blurred"><div class="modal-panel modal-sm">' +
+      '<div class="text-center" style="margin-bottom:24px">' +
+        '<div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;' +
+          'justify-content:center;margin:0 auto 16px;background:var(--color-warning-light)">' +
+          icon('alertCircle', 24, 'var(--color-warning-dark)') + '</div>' +
+        '<h3 style="font-size:var(--font-size-lg);font-weight:700;margin:0 0 8px">문제를 건너뛰시겠습니까?</h3>' +
+        '<p style="font-size:var(--font-size-sm);color:var(--color-text-secondary);line-height:1.6;margin:0">' +
+          '건너뛰기를 할 시 <strong style="color:var(--color-error)">오답 처리</strong>됩니다.<br />' +
+          '<span style="font-size:var(--font-size-xs);color:var(--color-text-tertiary)">(타이머가 일시 정지되었습니다)</span>' +
+        '</p>' +
+      '</div>' +
+      '<div class="flex gap-3">' +
+        '<button class="btn btn-ghost btn-md flex-1" data-skip-cancel>취소</button>' +
+        '<button class="btn btn-danger btn-md flex-1" data-skip-confirm>확인</button>' +
+      '</div>' +
+    '</div></div>';
+}
+
+/* =============================================================================
+   화면 5 — SessionComplete
+   ============================================================================= */
+function renderComplete() {
+  const s = state.summary || {
+    totalQuestions: state.solvedCount,
+    correctCount: state.correctCount,
+    incorrectCount: state.solvedCount - state.correctCount,
+    averageResponseTimeMs: avgTime(),
+  };
+  const accuracy = s.totalQuestions > 0
+    ? Math.round((s.correctCount / s.totalQuestions) * 100) : 0;
+  const avg = (s.averageResponseTimeMs / 1000).toFixed(1);
+
+  return '' +
+    '<div class="screen complete-screen"><div class="complete-card">' +
+      '<div class="cc-trophy">' + icon('trophy', 48, 'var(--color-warning)') + '</div>' +
+      '<h2 class="cc-h2">학습 완료!</h2>' +
+      '<p class="cc-sub">오늘의 연속 학습을 완료했습니다.</p>' +
+      '<div class="cc-stats">' +
+        '<div><p class="cc-stat-value" style="color:var(--color-primary)">' + s.totalQuestions + '</p>' +
+          '<p class="cc-stat-label">총 문제</p></div>' +
+        '<div><p class="cc-stat-value" style="color:var(--color-success)">' + accuracy + '%</p>' +
+          '<p class="cc-stat-label">정답률</p></div>' +
+        '<div><p class="cc-stat-value" style="color:var(--color-info)">' + avg + 's</p>' +
+          '<p class="cc-stat-label">평균 시간</p></div>' +
+      '</div>' +
+      '<div class="cc-detail">' +
+        '<div>' + icon('checkCircle', 18, 'var(--color-success)') + '<span>' + s.correctCount + ' 정답</span></div>' +
+        '<div>' + icon('xCircle', 18, 'var(--color-error)') + '<span>' + s.incorrectCount + ' 오답</span></div>' +
+      '</div>' +
+      '<div class="cc-actions">' +
+        '<button class="btn btn-outline btn-md" data-retry>' + icon('refreshCw', 18) + '다시 학습하기</button>' +
+        '<button class="btn btn-primary btn-lg" data-return-course>코스로 돌아가기</button>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function avgTime() {
+  if (!state.responseTimes.length) return 0;
+  const sum = state.responseTimes.reduce(function (a, b) { return a + b; }, 0);
+  return sum / state.responseTimes.length;
+}
+
+/* =============================================================================
+   준비중 화면 (QuizContestComingSoon / COMMENTLE)
+   ============================================================================= */
+function renderComingSoon(title, desc) {
+  return '' +
+    '<div class="screen soon-screen">' +
+      '<h2 class="soon-title">' + esc(title) + '</h2>' +
+      '<p class="soon-desc">' + esc(desc) + '</p>' +
+      '<button class="btn btn-primary btn-md" data-nav="game">' + icon('arrowLeft', 18) + '퀴즈 홈으로</button>' +
+    '</div>';
+}
+
+/* =============================================================================
+   렌더 & 이벤트 위임
+   ============================================================================= */
+function render() {
+  let html = '';
+  switch (state.screen) {
+    case 'game': html = renderGameSelection(); break;
+    case 'courses': html = renderCourseList(); break;
+    case 'detail': html = renderCourseDetail(); break;
+    case 'session': html = renderSession(); break;
+    case 'complete': html = renderComplete(); break;
+    case 'contest':
+      html = renderComingSoon('QUIZ CONTEST 준비중',
+        '실시간 온라인 대전 모드는 아직 개발 중입니다. 원본 서비스에서도 준비중 화면이 노출됩니다.');
+      break;
+    case 'commentle':
+      html = renderComingSoon('COMMENTLE는 이 데모에 포함되지 않았습니다',
+        'S-ROBERTA 임베딩 기반 시맨틱 퀴즈로, AI 서버가 필요해 이번 데모에서는 제외했습니다.');
+      break;
+  }
+  if (state.toast) html += '<div class="toast">' + esc(state.toast) + '</div>';
+
+  app.innerHTML = html;
+  routeLabel.textContent = routeString();
+
+  if (state.screen === 'game') { startTyping(); bindMascot(); }
+  if (state.screen === 'session') focusInput();
+}
+
+/* --- COMMENTLE 카드 타이핑 애니메이션 --- */
+let typingTimer = null;
+function startTyping() {
+  clearInterval(typingTimer);
+  const el = document.getElementById('typingText');
+  if (!el) return;
+  const text = 'ALGORITHM';
+  let i = 0;
+  typingTimer = setInterval(function () {
+    const node = document.getElementById('typingText');
+    if (!node) { clearInterval(typingTimer); return; }
+    if (i < text.length) { node.textContent = text.slice(0, ++i); }
+    else { setTimeout(function () { i = 0; if (node) node.textContent = ''; }, 2000); }
+  }, 150);
+}
+
+/* --- 마스코트 눈동자 커서 추적 --- */
+function bindMascot() {
+  const mascot = document.getElementById('mascot');
+  if (!mascot) return;
+  const pupils = mascot.querySelectorAll('[data-pupil]');
+  window.onmousemove = function (e) {
+    const rect = mascot.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width / 2);
+    const dy = e.clientY - (rect.top + rect.height / 2);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const maxMove = 3;
+    const nx = dist > 0 ? dx / dist : 0;
+    const ny = dist > 0 ? dy / dist : 0;
+    const move = Math.min(dist / 100, 1) * maxMove;
+    pupils.forEach(function (p) {
+      p.style.transform = 'translate(' + (nx * move) + 'px,' + (ny * move) + 'px)';
+    });
+  };
+}
+
+function focusInput() {
+  const input = document.getElementById('shortAnswer');
+  if (input && !state.showFeedback && !state.showSkipConfirm) {
+    const len = input.value.length;
+    input.focus();
+    input.setSelectionRange(len, len);
+  }
+}
+
+/* --- 제출 / 채점 --- */
+function handleSubmit() {
+  if (!isAnswerValid() || state.isSubmitting) return;
+  const q = currentQuestion();
+  const elapsed = timer.stop();
+
+  state.isSubmitting = true;
+  render();
+
+  // 서버 왕복을 흉내내기 위한 지연 (채점 중... 상태 노출)
+  setTimeout(function () {
+    // 클라이언트는 선택한 답안 값만 전달한다 — isCorrect는 보내지 않는다
+    const result = server.submitAnswer(q.id, state.answer);
+
+    state.responseTimes.push(elapsed);
+    state.solvedCount += 1;
+    if (result.isCorrect) state.correctCount += 1;
+
+    state.isSubmitting = false;
+    state.feedbackData = result;
+    state.showFeedback = true;
+    render();
+  }, 320);
+}
+
+function handleNextQuestion() {
+  state.showFeedback = false;
+  state.feedbackData = null;
+  state.answer = null;
+  state.index += 1;
+
+  if (state.index >= state.queue.length) {
+    state.summary = {
+      totalQuestions: state.solvedCount,
+      correctCount: state.correctCount,
+      incorrectCount: state.solvedCount - state.correctCount,
+      averageResponseTimeMs: avgTime(),
+    };
+    go('complete');
+    return;
+  }
+  timer.start();
+  render();
+}
+
+function handleSkipConfirm() {
+  const q = currentQuestion();
+  const elapsed = timer.stop();
+
+  state.showSkipConfirm = false;
+  state.responseTimes.push(elapsed);
+  state.solvedCount += 1; // 건너뛰기는 오답 처리 (정답 수는 늘지 않음)
+
+  const result = server.submitAnswer(q.id, null);
+  state.feedbackData = { isCorrect: false, correctAnswer: result.correctAnswer, explanation: result.explanation };
+  state.showFeedback = true;
+  render();
+}
+
+/* --- 이벤트 위임 --- */
+app.addEventListener('click', function (e) {
+  const t = e.target;
+
+  const nav = t.closest('[data-nav]');
+  if (nav) { go(nav.getAttribute('data-nav')); return; }
+
+  // 게임 카드
+  const gameCard = t.closest('[data-game]');
+  if (gameCard) {
+    const id = gameCard.getAttribute('data-game');
+    if (id === 'practice') go('courses');
+    else if (id === 'contest') go('contest');
+    else go('commentle');
+    return;
+  }
+
+  // 필터
+  const filterBtn = t.closest('[data-filter]');
+  if (filterBtn) { state.filter = filterBtn.getAttribute('data-filter'); render(); return; }
+
+  // 코스 카드
+  const courseCard = t.closest('[data-course]');
+  if (courseCard) { go('detail', { courseId: Number(courseCard.getAttribute('data-course')) }); return; }
+
+  // 섹션 클릭 → 학습량 설정 모달
+  const sectionBtn = t.closest('[data-section]');
+  if (sectionBtn) {
+    state.pendingSection = Number(sectionBtn.getAttribute('data-section'));
+    state.showLimitModal = true;
+    render();
+    return;
+  }
+
+  // 학습량 모달
+  const limitBtn = t.closest('[data-limit]');
+  if (limitBtn) { state.limit = Number(limitBtn.getAttribute('data-limit')); render(); return; }
+  if (t.closest('[data-limit-cancel]') || t.matches('[data-overlay="limit"]')) {
+    state.showLimitModal = false; render(); return;
+  }
+  if (t.closest('[data-limit-start]')) {
+    state.showLimitModal = false;
+    startSession(state.courseId, state.pendingSection, state.limit);
+    return;
+  }
+
+  // 세션 — 선택지
+  const optionBtn = t.closest('[data-option]');
+  if (optionBtn) {
+    const id = optionBtn.getAttribute('data-option');
+    const q = currentQuestion();
+    if (q.type === 'single-choice') {
+      state.answer = id;
+    } else {
+      const cur = Array.isArray(state.answer) ? state.answer.slice() : [];
+      const idx = cur.indexOf(id);
+      if (idx === -1) cur.push(id); else cur.splice(idx, 1);
+      state.answer = cur;
+    }
+    render();
+    return;
+  }
+
+  if (t.closest('[data-submit]')) { handleSubmit(); return; }
+  if (t.closest('[data-continue]')) { handleNextQuestion(); return; }
+
+  if (t.closest('[data-skip]')) {
+    timer.pause();
+    state.showSkipConfirm = true;
+    render();
+    return;
+  }
+  if (t.closest('[data-skip-cancel]')) {
+    state.showSkipConfirm = false;
+    timer.resume();
+    render();
+    return;
+  }
+  if (t.closest('[data-skip-confirm]')) { handleSkipConfirm(); return; }
+
+  if (t.closest('[data-session-exit]')) { go('detail'); return; }
+  if (t.closest('[data-return-course]')) { go('detail'); return; }
+  if (t.closest('[data-retry]')) { startSession(state.courseId, state.sectionNumber, state.limit); return; }
+});
+
+// 단답형 입력
+app.addEventListener('input', function (e) {
+  if (e.target.id === 'shortAnswer') {
+    state.answer = e.target.value;
+    // 제출 버튼 활성화만 갱신 (재렌더 시 포커스 유실 방지)
+    const btn = app.querySelector('[data-submit]');
+    if (btn) btn.disabled = !isAnswerValid() || state.isSubmitting;
+  }
+});
+
+// 단답형 Enter 제출 (IME 조합 중 무시)
+app.addEventListener('keydown', function (e) {
+  if (e.target.id !== 'shortAnswer') return;
+  if (e.isComposing || e.keyCode === 229) return;
+  if (e.key !== 'Enter') return;
+  if (state.showFeedback) return;
+  e.preventDefault();
+  handleSubmit();
+});
+
+// 피드백 모달에서 Enter로 다음 문제
+// (제출 Enter가 모달로 전파되지 않도록 100ms 지연 후 등록 — 원본과 동일)
+let feedbackKeyHandler = null;
+let feedbackKeyTimeout = null;
+function syncFeedbackKeyBinding() {
+  clearTimeout(feedbackKeyTimeout);
+  if (feedbackKeyHandler) {
+    window.removeEventListener('keydown', feedbackKeyHandler);
+    feedbackKeyHandler = null;
+  }
+  if (!state.showFeedback) return;
+  feedbackKeyTimeout = setTimeout(function () {
+    feedbackKeyHandler = function (e) {
+      if (e.isComposing || e.keyCode === 229) return;
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      e.stopPropagation();
+      handleNextQuestion();
+    };
+    window.addEventListener('keydown', feedbackKeyHandler);
+  }, 100);
+}
+
+// 세션 중 복사/선택/드래그 방지 (FSRS 데이터 정확도 보호)
+// 단답형 input은 예외
+['copy', 'selectstart', 'contextmenu', 'dragstart'].forEach(function (evt) {
+  document.addEventListener(evt, function (e) {
+    if (state.screen !== 'session') return;
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    e.preventDefault();
+  });
+});
+
+document.getElementById('btnHome').addEventListener('click', function () { go('game'); });
+
+// render를 감싸 피드백 키 바인딩을 동기화
+const _render = render;
+render = function () { _render(); syncFeedbackKeyBinding(); };
+
+render();
+</script>
+</body>
+</html>

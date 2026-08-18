@@ -57,7 +57,7 @@
   }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
   code, .mono { font-family: "SF Mono", "Menlo", "Consolas", monospace; }
 
   /* nav */
@@ -67,7 +67,7 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
-  .navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 880px; margin: 0 auto; }
+  .navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 1120px; margin: 0 auto; }
   .navbar .brand { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
   .navlinks { display: flex; gap: 18px; font-size: 13.5px; color: var(--text-dim); flex-wrap: wrap; }
   .navlinks a { color: var(--text-dim); }
@@ -116,6 +116,72 @@
   .project li { margin-bottom: 6px; }
   .project-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 
+  /* project gallery */
+  .project-gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  @media (max-width: 760px) { .project-gallery { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .project-gallery { grid-template-columns: 1fr; } }
+  .gallery-card {
+    width: 100%; text-align: left; font: inherit; color: var(--text);
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px;
+    box-shadow: var(--shadow); cursor: pointer; display: flex; flex-direction: column;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .gallery-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .gallery-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .gallery-thumb {
+    height: 84px; border-radius: 10px; margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent-soft), var(--tag-bg));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 700; color: var(--accent); letter-spacing: -0.01em;
+  }
+  .gallery-title { font-size: 16.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
+  .gallery-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 10px; }
+  .gallery-desc { font-size: 13.5px; color: var(--text-dim); margin-bottom: 16px; flex: 1; }
+  .gallery-more { font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+  /* project detail modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,12,16,0.55); backdrop-filter: blur(2px);
+    display: flex; align-items: flex-start; justify-content: center; padding: 60px 20px;
+    z-index: 100; opacity: 0; pointer-events: none; transition: opacity .15s ease;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    max-width: 780px; width: 100%; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35); padding: 30px; position: relative;
+    transform: translateY(-10px); transition: transform .15s ease;
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0); }
+  .modal-close {
+    position: absolute; top: 18px; right: 18px; border: 1px solid var(--border); background: var(--bg-alt);
+    color: var(--text-dim); width: 32px; height: 32px; border-radius: 999px; cursor: pointer;
+    font-size: 15px; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--accent); }
+  @media (max-width: 640px) { .modal-overlay { padding: 24px 14px; } .modal-box { padding: 24px 20px; } }
+
+  /* live demo modal */
+  .modal-box.wide { max-width: 1120px; max-height: 92vh; padding: 22px; }
+  .demo-tabs { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-right: 44px; flex-wrap: wrap; }
+  .demo-tab {
+    border: 1px solid var(--border); background: var(--bg-alt); color: var(--text-dim);
+    padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all .15s ease;
+  }
+  .demo-tab:hover { color: var(--text); border-color: var(--accent); }
+  .demo-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .demo-open { margin-left: auto; font-size: 12.5px; color: var(--text-dim); text-decoration: none; border-bottom: 1px solid transparent; white-space: nowrap; }
+  .demo-open:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .demo-frame {
+    width: 100%; height: min(74vh, 800px); border: 1px solid var(--border);
+    border-radius: 12px; background: #F8F9FA; display: block;
+  }
+  .demo-note { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; line-height: 1.65; }
+  @media (max-width: 640px) { .demo-frame { height: 68vh; } .demo-open { margin-left: 0; } }
+
   /* deep dive */
   .dive { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; }
   .dive summary { cursor: pointer; list-style: none; padding: 18px 22px; font-weight: 600; font-size: 15.5px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
@@ -158,7 +224,6 @@
       <a href="#about">소개</a>
       <a href="#skills">기술</a>
       <a href="#projects">프로젝트</a>
-      <a href="#deepdive">트러블슈팅</a>
       <a href="#awards">수상·교육</a>
       <a href="#contact">연락처</a>
       <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">◐</button>
@@ -234,9 +299,35 @@
 
   <section id="projects">
     <h2 class="section-title">프로젝트</h2>
-    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다.</p>
+    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다. 카드를 클릭하면 상세 내용을 볼 수 있습니다.</p>
 
-    <div class="project">
+    <div class="project-gallery">
+      <button class="gallery-card" onclick="openProject('aida')">
+        <div class="gallery-thumb">아이다</div>
+        <div class="gallery-title">아이다 <span class="award-badge">🥇 1등</span></div>
+        <div class="gallery-meta">2026.04 – 2026.05 · 담당: Infra, FE</div>
+        <div class="gallery-desc">AI의 오답을 직접 경험하며 데이터를 보완하는 스토리 기반 AI 리터러시 교육 서비스</div>
+        <div class="gallery-more">자세히 보기 →</div>
+      </button>
+
+      <button class="gallery-card" onclick="openProject('newsbara')">
+        <div class="gallery-thumb">뉴스바라</div>
+        <div class="gallery-title">뉴스바라 <span class="award-badge">🥉 3등</span></div>
+        <div class="gallery-meta">2026.02 – 2026.03 · 담당: Backend, Infra</div>
+        <div class="gallery-desc">관심 키워드와 기사 임베딩 기반으로 개인화된 IT 뉴스를 추천하는 큐레이션 서비스</div>
+        <div class="gallery-more">자세히 보기 →</div>
+      </button>
+
+      <button class="gallery-card" onclick="openProject('squiz')">
+        <div class="gallery-thumb">SQUIZ</div>
+        <div class="gallery-title">SQUIZ</div>
+        <div class="gallery-meta">2026.01 – 2026.02 · 담당: Full Stack (퀴즈 도메인)</div>
+        <div class="gallery-desc">스터디 생성부터 퀴즈 학습, 복습, 통계까지 연결한 FSRS 기반 AI 학습 플랫폼</div>
+        <div class="gallery-more">데모 체험하기 →</div>
+      </button>
+    </div>
+
+    <template id="tpl-aida">
       <div class="project-head">
         <div class="project-title">아이다 <span class="award-badge">🥇 우수상 1등</span></div>
       </div>
@@ -258,9 +349,25 @@
         </div>
         <a href="https://github.com/jiwon824/aida" target="_blank" rel="noopener">GitHub →</a>
       </div>
-    </div>
 
-    <div class="project">
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin:26px 0 10px;">트러블슈팅 딥다이브</h3>
+      <details class="dive">
+        <summary><span>설정의 영속성 ≠ 데이터의 영속성 — Prometheus 데이터 유실</span><span class="chev">▸</span></summary>
+        <div class="dive-body">
+          <h4>상황</h4>
+          <p>운영 환경에서 <code>docker compose down/up</code>으로 재배포할 때마다 Prometheus에 쌓인 모니터링 지표가 사라졌습니다.</p>
+          <h4>원인</h4>
+          <p>Prometheus 컨테이너의 TSDB 데이터 경로가 별도 볼륨에 연결돼 있지 않아, 컨테이너 재생성 시 함께 삭제되고 있었습니다. 설정 파일은 이미지·마운트로 영속이지만, 런타임 데이터는 그렇지 않다는 것을 구분하게 된 지점입니다.</p>
+          <h4>해결</h4>
+          <p>Prometheus TSDB 경로를 named volume으로 분리해, 재배포 이후에도 지표 이력이 보존되도록 개선했습니다.</p>
+          <div class="limit">
+            <b>한계:</b> Grafana 대시보드는 구성하지 않아 지표 수집까지만 진행했고, 알림 임계치·시각화는 다루지 못했습니다. k6 테스트도 health endpoint 대상 스모크 테스트(1 VU·5회) 수준이라, 실제 부하·장애 상황에 대한 검증은 진행하지 못했습니다.
+          </div>
+        </div>
+      </details>
+    </template>
+
+    <template id="tpl-newsbara">
       <div class="project-head">
         <div class="project-title">뉴스바라 <span class="award-badge">🥉 우수상 3등</span></div>
       </div>
@@ -282,9 +389,42 @@
         </div>
         <a href="https://github.com/jiwon824/newsbara" target="_blank" rel="noopener">GitHub →</a>
       </div>
-    </div>
 
-    <div class="project">
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin:26px 0 10px;">트러블슈팅 딥다이브</h3>
+      <details class="dive">
+        <summary><span>개별 테스트는 656ms인데 전체는 6분 38초 — 테스트 종료 지연</span><span class="chev">▸</span></summary>
+        <div class="dive-body">
+          <h4>상황</h4>
+          <p>CI 파이프라인이 지연되어 코드 변경부터 배포 반영까지의 시간이 길어졌습니다. 전체 테스트 실행에 6분 38초가 소요됐습니다.</p>
+          <h4>문제 인식</h4>
+          <p><code>afterTest</code> 훅으로 개별 테스트 시간을 측정하자 최장 테스트가 656ms에 불과했습니다. 테스트 실행 자체가 아니라 <b>종료 단계</b>가 병목이라는 모순을 발견했습니다.</p>
+          <h4>원인</h4>
+          <p>테스트 본문은 종료됐지만 Redis/Lettuce 재연결 스레드와 Hikari shutdown 로그가 반복되며 JVM 종료가 지연되고 있었습니다. Hibernate <code>ddl-auto</code>가 <code>create-drop</code>이라 컨테이너 종료 이후에도 불필요한 drop 시도가 발생했습니다.</p>
+          <h4>해결</h4>
+          <p>Testcontainers를 <code>Startables.deepStart()</code>로 초기화 순서를 고정하고, AsyncExecutor에 shutdown 대기 정책을 적용했습니다. Redis 테스트 설정의 connect/command/shutdown timeout을 축소해 재연결 시도 지연을 제거하고, Hibernate <code>ddl-auto</code>를 <code>create</code>로 변경했습니다.</p>
+          <h4>결과</h4>
+          <p class="stat-line">6분 38초 → 1분 33초 (약 77% 단축) · 159개(단위 93 + 통합 66) 전체 통과 재검증</p>
+          <div class="limit">
+            <b>한계:</b> 원인 분석과 개선 과정에서 AI의 도움을 받은 비중이 컸습니다. 직접 측정한 범위와 AI에 맡긴 범위, 이후 직접 검증한 부분을 구분해 정리하는 작업을 이어가고 있습니다.
+          </div>
+        </div>
+      </details>
+      <details class="dive">
+        <summary><span>왜 DB 수준인가 — 멱등성과 저장소 역할 분리</span><span class="chev">▸</span></summary>
+        <div class="dive-body">
+          <h4>상황</h4>
+          <p>하루 한 번 제공되는 오늘의 퀴즈를 같은 날 중복 제출하면, unique 제약 충돌로 500 오류가 발생했습니다.</p>
+          <h4>결정</h4>
+          <p>애플리케이션 레벨에서 예외를 해석해 처리하는 대신 <code>ON CONFLICT DO NOTHING</code>으로 DB 수준에서 멱등 처리해, 하루 한 번의 스트릭 적립을 보장했습니다.</p>
+          <h4>부속 설계</h4>
+          <p>관계와 정합성이 중요한 서비스 데이터는 PostgreSQL, 구조가 유연한 기사 원문은 MongoDB, 추천 후보군·이력 등 실행 상태는 Redis로 저장소 역할을 분리했습니다. Redis 추천 풀은 임시 키에 새 데이터를 채운 뒤 <code>RENAME</code>으로 교체해 교체 과정의 원자성을 확보했고, 후보가 부족하면 DB 조회로 보충하는 fallback 구조를 추가했습니다.</p>
+          <h4>결과</h4>
+          <p class="stat-line">중복 요청·후보 부족 상황에서도 API가 실패하지 않는 안정적 응답 확보</p>
+        </div>
+      </details>
+    </template>
+
+    <template id="tpl-squiz">
       <div class="project-head">
         <div class="project-title">SQUIZ</div>
       </div>
@@ -306,76 +446,24 @@
         </div>
         <a href="https://github.com/jiwon824/squiz" target="_blank" rel="noopener">GitHub →</a>
       </div>
-    </div>
-  </section>
 
-  <section id="deepdive">
-    <h2 class="section-title">트러블슈팅 딥다이브</h2>
-    <p class="section-sub">이력서의 결과 뒤에 있는 문제 인식과 해결 과정입니다. 한계와 남은 과제도 함께 남깁니다.</p>
-
-    <details class="dive" open>
-      <summary><span>개별 테스트는 656ms인데 전체는 6분 38초 — 뉴스바라 테스트 종료 지연</span><span class="proj-tag">뉴스바라</span><span class="chev">▸</span></summary>
-      <div class="dive-body">
-        <h4>상황</h4>
-        <p>CI 파이프라인이 지연되어 코드 변경부터 배포 반영까지의 시간이 길어졌습니다. 전체 테스트 실행에 6분 38초가 소요됐습니다.</p>
-        <h4>문제 인식</h4>
-        <p><code>afterTest</code> 훅으로 개별 테스트 시간을 측정하자 최장 테스트가 656ms에 불과했습니다. 테스트 실행 자체가 아니라 <b>종료 단계</b>가 병목이라는 모순을 발견했습니다.</p>
-        <h4>원인</h4>
-        <p>테스트 본문은 종료됐지만 Redis/Lettuce 재연결 스레드와 Hikari shutdown 로그가 반복되며 JVM 종료가 지연되고 있었습니다. Hibernate <code>ddl-auto</code>가 <code>create-drop</code>이라 컨테이너 종료 이후에도 불필요한 drop 시도가 발생했습니다.</p>
-        <h4>해결</h4>
-        <p>Testcontainers를 <code>Startables.deepStart()</code>로 초기화 순서를 고정하고, AsyncExecutor에 shutdown 대기 정책을 적용했습니다. Redis 테스트 설정의 connect/command/shutdown timeout을 축소해 재연결 시도 지연을 제거하고, Hibernate <code>ddl-auto</code>를 <code>create</code>로 변경했습니다.</p>
-        <h4>결과</h4>
-        <p class="stat-line">6분 38초 → 1분 33초 (약 77% 단축) · 159개(단위 93 + 통합 66) 전체 통과 재검증</p>
-        <div class="limit">
-          <b>한계:</b> 원인 분석과 개선 과정에서 AI의 도움을 받은 비중이 컸습니다. 직접 측정한 범위와 AI에 맡긴 범위, 이후 직접 검증한 부분을 구분해 정리하는 작업을 이어가고 있습니다.
+      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin:26px 0 10px;">트러블슈팅 딥다이브</h3>
+      <details class="dive">
+        <summary><span>왜 클라이언트를 믿지 않는가 — 서버 중심 채점</span><span class="chev">▸</span></summary>
+        <div class="dive-body">
+          <h4>상황</h4>
+          <p>답안 제출 단계에서 클라이언트가 채점 결과(<code>isCorrect</code>)를 직접 서버로 전달하는 구조였습니다.</p>
+          <h4>문제 인식</h4>
+          <p>요청 값을 조작하면 채점 결과를 임의로 바꿀 수 있어, 추천·복습 서비스의 핵심 신뢰성이 깨질 수 있는 구조였습니다.</p>
+          <h4>해결</h4>
+          <p>클라이언트는 선택한 답안 값만 전달하고, 서버가 이를 Set으로 파싱해 보유한 정답과 비교하는 방식으로 직접 채점하도록 변경했습니다. 이후 요구사항이 문제집 방식에서 연속 퀴즈로 바뀌자, 진행 상태·다음 문제 선택·섹션 접근 규칙까지 서버 중심 API로 재설계했습니다.</p>
+          <h4>부속 설계</h4>
+          <p>현재 복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고, FSRS 알고리즘으로 다음 복습 시점을 계산해 갱신했습니다.</p>
+          <h4>결과</h4>
+          <p class="stat-line">요청 조작으로 채점 결과를 변경할 수 없는 구조 확보</p>
         </div>
-      </div>
-    </details>
-
-    <details class="dive">
-      <summary><span>왜 클라이언트를 믿지 않는가 — SQUIZ 서버 중심 채점</span><span class="proj-tag">SQUIZ</span><span class="chev">▸</span></summary>
-      <div class="dive-body">
-        <h4>상황</h4>
-        <p>답안 제출 단계에서 클라이언트가 채점 결과(<code>isCorrect</code>)를 직접 서버로 전달하는 구조였습니다.</p>
-        <h4>문제 인식</h4>
-        <p>요청 값을 조작하면 채점 결과를 임의로 바꿀 수 있어, 추천·복습 서비스의 핵심 신뢰성이 깨질 수 있는 구조였습니다.</p>
-        <h4>해결</h4>
-        <p>클라이언트는 선택한 답안 값만 전달하고, 서버가 이를 Set으로 파싱해 보유한 정답과 비교하는 방식으로 직접 채점하도록 변경했습니다. 이후 요구사항이 문제집 방식에서 연속 퀴즈로 바뀌자, 진행 상태·다음 문제 선택·섹션 접근 규칙까지 서버 중심 API로 재설계했습니다.</p>
-        <h4>부속 설계</h4>
-        <p>현재 복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고, FSRS 알고리즘으로 다음 복습 시점을 계산해 갱신했습니다.</p>
-        <h4>결과</h4>
-        <p class="stat-line">요청 조작으로 채점 결과를 변경할 수 없는 구조 확보</p>
-      </div>
-    </details>
-
-    <details class="dive">
-      <summary><span>왜 DB 수준인가 — 뉴스바라 멱등성과 저장소 역할 분리</span><span class="proj-tag">뉴스바라</span><span class="chev">▸</span></summary>
-      <div class="dive-body">
-        <h4>상황</h4>
-        <p>하루 한 번 제공되는 오늘의 퀴즈를 같은 날 중복 제출하면, unique 제약 충돌로 500 오류가 발생했습니다.</p>
-        <h4>결정</h4>
-        <p>애플리케이션 레벨에서 예외를 해석해 처리하는 대신 <code>ON CONFLICT DO NOTHING</code>으로 DB 수준에서 멱등 처리해, 하루 한 번의 스트릭 적립을 보장했습니다.</p>
-        <h4>부속 설계</h4>
-        <p>관계와 정합성이 중요한 서비스 데이터는 PostgreSQL, 구조가 유연한 기사 원문은 MongoDB, 추천 후보군·이력 등 실행 상태는 Redis로 저장소 역할을 분리했습니다. Redis 추천 풀은 임시 키에 새 데이터를 채운 뒤 <code>RENAME</code>으로 교체해 교체 과정의 원자성을 확보했고, 후보가 부족하면 DB 조회로 보충하는 fallback 구조를 추가했습니다.</p>
-        <h4>결과</h4>
-        <p class="stat-line">중복 요청·후보 부족 상황에서도 API가 실패하지 않는 안정적 응답 확보</p>
-      </div>
-    </details>
-
-    <details class="dive">
-      <summary><span>설정의 영속성 ≠ 데이터의 영속성 — 아이다 Prometheus 데이터 유실</span><span class="proj-tag">아이다</span><span class="chev">▸</span></summary>
-      <div class="dive-body">
-        <h4>상황</h4>
-        <p>운영 환경에서 <code>docker compose down/up</code>으로 재배포할 때마다 Prometheus에 쌓인 모니터링 지표가 사라졌습니다.</p>
-        <h4>원인</h4>
-        <p>Prometheus 컨테이너의 TSDB 데이터 경로가 별도 볼륨에 연결돼 있지 않아, 컨테이너 재생성 시 함께 삭제되고 있었습니다. 설정 파일은 이미지·마운트로 영속이지만, 런타임 데이터는 그렇지 않다는 것을 구분하게 된 지점입니다.</p>
-        <h4>해결</h4>
-        <p>Prometheus TSDB 경로를 named volume으로 분리해, 재배포 이후에도 지표 이력이 보존되도록 개선했습니다.</p>
-        <div class="limit">
-          <b>한계:</b> Grafana 대시보드는 구성하지 않아 지표 수집까지만 진행했고, 알림 임계치·시각화는 다루지 못했습니다. k6 테스트도 health endpoint 대상 스모크 테스트(1 VU·5회) 수준이라, 실제 부하·장애 상황에 대한 검증은 진행하지 못했습니다.
-        </div>
-      </div>
-    </details>
+      </details>
+    </template>
   </section>
 
   <section id="awards">
@@ -411,7 +499,84 @@
 
 </div>
 
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="닫기">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
 <script>
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalBody = document.getElementById('modalBody');
+
+  const modalBox = modalOverlay.querySelector('.modal-box');
+
+  // 데모가 준비된 프로젝트 — 모달을 [데모 / 상세] 탭 구조로 연다
+  const DEMOS = {
+    squiz: {
+      src: 'demos/squiz.html',
+      note: '실제 SQUIZ 프론트엔드(React + TypeScript)의 퀴즈 도메인 화면을 그대로 옮긴 데모입니다. ' +
+            '백엔드 없이 동작하도록 목업 데이터를 사용하며, 채점은 원본과 동일하게 서버 역할을 하는 쪽에서만 수행합니다.'
+    }
+  };
+
+  function openProject(id) {
+    const tpl = document.getElementById('tpl-' + id);
+    if (!tpl) return;
+
+    const demo = DEMOS[id];
+    modalBody.innerHTML = '';
+    modalBox.classList.toggle('wide', !!demo);
+
+    if (!demo) {
+      modalBody.appendChild(tpl.content.cloneNode(true));
+    } else {
+      const tabs = document.createElement('div');
+      tabs.className = 'demo-tabs';
+      tabs.innerHTML =
+        '<button class="demo-tab active" data-pane="demo">데모 체험</button>' +
+        '<button class="demo-tab" data-pane="detail">상세 · 트러블슈팅</button>' +
+        '<a class="demo-open" href="' + demo.src + '" target="_blank" rel="noopener">새 탭에서 열기 ↗</a>';
+
+      const paneDemo = document.createElement('div');
+      // iframe은 모달을 열 때 처음 생성된다 — 첫 방문자는 데모를 내려받지 않는다
+      paneDemo.innerHTML =
+        '<iframe class="demo-frame" src="' + demo.src + '" title="SQUIZ 데모" loading="lazy"></iframe>' +
+        '<p class="demo-note">' + demo.note + '</p>';
+
+      const paneDetail = document.createElement('div');
+      paneDetail.hidden = true;
+      paneDetail.appendChild(tpl.content.cloneNode(true));
+
+      tabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.demo-tab');
+        if (!btn) return;
+        const showDemo = btn.dataset.pane === 'demo';
+        tabs.querySelectorAll('.demo-tab').forEach(b => b.classList.toggle('active', b === btn));
+        paneDemo.hidden = !showDemo;
+        paneDetail.hidden = showDemo;
+      });
+
+      modalBody.append(tabs, paneDemo, paneDetail);
+    }
+
+    modalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeProject() {
+    modalOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    modalBody.innerHTML = ''; // iframe 정리 (타이머·애니메이션 중단)
+  }
+  document.getElementById('modalClose').addEventListener('click', closeProject);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeProject();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeProject();
+  });
+
   const toggle = document.getElementById('themeToggle');
   const root = document.documentElement;
   const stored = localStorage.getItem('theme');
