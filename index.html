@@ -128,7 +128,7 @@
     box-shadow: var(--shadow); cursor: pointer; display: flex; flex-direction: column;
     transition: border-color .15s ease, transform .15s ease;
   }
-  .gallery-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .gallery-card:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
   .gallery-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .gallery-thumb {
     height: 84px; border-radius: 10px; margin-bottom: 16px;
@@ -162,25 +162,6 @@
   }
   .modal-close:hover { color: var(--text); border-color: var(--accent); }
   @media (max-width: 640px) { .modal-overlay { padding: 24px 14px; } .modal-box { padding: 24px 20px; } }
-
-  /* live demo modal */
-  .modal-box.wide { max-width: 1120px; max-height: 92vh; padding: 22px; }
-  .demo-tabs { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-right: 44px; flex-wrap: wrap; }
-  .demo-tab {
-    border: 1px solid var(--border); background: var(--bg-alt); color: var(--text-dim);
-    padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
-    cursor: pointer; font-family: inherit; transition: all .15s ease;
-  }
-  .demo-tab:hover { color: var(--text); border-color: var(--accent); }
-  .demo-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-  .demo-open { margin-left: auto; font-size: 12.5px; color: var(--text-dim); text-decoration: none; border-bottom: 1px solid transparent; white-space: nowrap; }
-  .demo-open:hover { color: var(--accent); border-bottom-color: var(--accent); }
-  .demo-frame {
-    width: 100%; height: min(74vh, 800px); border: 1px solid var(--border);
-    border-radius: 12px; background: #F8F9FA; display: block;
-  }
-  .demo-note { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; line-height: 1.65; }
-  @media (max-width: 640px) { .demo-frame { height: 68vh; } .demo-open { margin-left: 0; } }
 
   /* deep dive */
   .dive { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; }
@@ -318,13 +299,13 @@
         <div class="gallery-more">자세히 보기 →</div>
       </button>
 
-      <button class="gallery-card" onclick="openProject('squiz')">
+      <a class="gallery-card" href="demos/squiz.html">
         <div class="gallery-thumb">SQUIZ</div>
         <div class="gallery-title">SQUIZ</div>
         <div class="gallery-meta">2026.01 – 2026.02 · 담당: Full Stack (퀴즈 도메인)</div>
         <div class="gallery-desc">스터디 생성부터 퀴즈 학습, 복습, 통계까지 연결한 FSRS 기반 AI 학습 플랫폼</div>
         <div class="gallery-more">데모 체험하기 →</div>
-      </button>
+      </a>
     </div>
 
     <template id="tpl-aida">
@@ -510,65 +491,42 @@
   const modalOverlay = document.getElementById('modalOverlay');
   const modalBody = document.getElementById('modalBody');
 
-  const modalBox = modalOverlay.querySelector('.modal-box');
-
-  // 데모가 준비된 프로젝트 — 모달을 [데모 / 상세] 탭 구조로 연다
-  const DEMOS = {
-    squiz: {
-      src: 'demos/squiz.html',
-      note: '실제 SQUIZ 프론트엔드(React + TypeScript)의 퀴즈 도메인 화면을 그대로 옮긴 데모입니다. ' +
-            '백엔드 없이 동작하도록 목업 데이터를 사용하며, 채점은 원본과 동일하게 서버 역할을 하는 쪽에서만 수행합니다.'
-    }
-  };
-
+  // 상세·트러블슈팅 모달.
+  // SQUIZ 카드는 모달이 아니라 데모 페이지(demos/squiz.html)로 직접 이동한다 —
+  // 모달 안에 iframe으로 띄우면 뒤로가기가 "데모 안에서 한 단계 뒤로"인지
+  // "모달 닫기"인지 모호해지지만, 일반 페이지 이동이면 히스토리가 하나로 합쳐진다.
+  // SQUIZ 상세는 데모 페이지의 "상세 · 트러블슈팅" 링크(#squiz)로 들어온다.
   function openProject(id) {
     const tpl = document.getElementById('tpl-' + id);
     if (!tpl) return;
-
-    const demo = DEMOS[id];
     modalBody.innerHTML = '';
-    modalBox.classList.toggle('wide', !!demo);
-
-    if (!demo) {
-      modalBody.appendChild(tpl.content.cloneNode(true));
-    } else {
-      const tabs = document.createElement('div');
-      tabs.className = 'demo-tabs';
-      tabs.innerHTML =
-        '<button class="demo-tab active" data-pane="demo">데모 체험</button>' +
-        '<button class="demo-tab" data-pane="detail">상세 · 트러블슈팅</button>' +
-        '<a class="demo-open" href="' + demo.src + '" target="_blank" rel="noopener">새 탭에서 열기 ↗</a>';
-
-      const paneDemo = document.createElement('div');
-      // iframe은 모달을 열 때 처음 생성된다 — 첫 방문자는 데모를 내려받지 않는다
-      paneDemo.innerHTML =
-        '<iframe class="demo-frame" src="' + demo.src + '" title="SQUIZ 데모" loading="lazy"></iframe>' +
-        '<p class="demo-note">' + demo.note + '</p>';
-
-      const paneDetail = document.createElement('div');
-      paneDetail.hidden = true;
-      paneDetail.appendChild(tpl.content.cloneNode(true));
-
-      tabs.addEventListener('click', (e) => {
-        const btn = e.target.closest('.demo-tab');
-        if (!btn) return;
-        const showDemo = btn.dataset.pane === 'demo';
-        tabs.querySelectorAll('.demo-tab').forEach(b => b.classList.toggle('active', b === btn));
-        paneDemo.hidden = !showDemo;
-        paneDetail.hidden = showDemo;
-      });
-
-      modalBody.append(tabs, paneDemo, paneDetail);
-    }
-
+    modalBody.appendChild(tpl.content.cloneNode(true));
     modalOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
   function closeProject() {
     modalOverlay.classList.remove('open');
     document.body.style.overflow = '';
-    modalBody.innerHTML = ''; // iframe 정리 (타이머·애니메이션 중단)
+    modalBody.innerHTML = '';
+    // 모달을 연 프로젝트 해시만 걷어낸다 (#projects 같은 목차 앵커는 건드리지 않는다)
+    const id = location.hash.replace(/^#/, '');
+    if (id && document.getElementById('tpl-' + id)) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
   }
+
+  // 데모 페이지에서 넘어온 #squiz 같은 해시로 상세 모달을 직접 연다
+  function openFromHash() {
+    const id = location.hash.replace(/^#/, '');
+    if (id && document.getElementById('tpl-' + id)) {
+      document.getElementById('projects').scrollIntoView();
+      openProject(id);
+    }
+  }
+  window.addEventListener('hashchange', openFromHash);
+  openFromHash();
+
   document.getElementById('modalClose').addEventListener('click', closeProject);
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) closeProject();

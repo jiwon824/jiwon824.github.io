@@ -153,8 +153,17 @@ button { font-family: inherit; }
   font-size: 12px;
   cursor: pointer;
   transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: inherit;
 }
 .demo-chrome .dc-btn:hover { background: #2c3039; color: #fff; }
+@media (max-width: 720px) {
+  .demo-chrome { gap: 8px; padding: 8px 12px; }
+  .demo-chrome .dc-label, .demo-chrome .dc-sep { display: none; }
+}
 
 /* =============================================================================
    공통 레이아웃 유틸
@@ -733,11 +742,13 @@ button { font-family: inherit; }
 
 <!-- 데모용 상단 바 (실제 SQUIZ에는 없음) -->
 <div class="demo-chrome">
+  <a class="dc-btn" href="../index.html">← 포트폴리오</a>
   <span class="dc-title">SQUIZ</span>
   <span class="dc-sep">·</span>
-  <span>퀴즈 도메인 데모</span>
-  <span class="dc-route" id="routeLabel">/quiz</span>
+  <span class="dc-label">퀴즈 도메인 데모</span>
+  <span class="dc-route" id="routeLabel">#/quiz</span>
   <span class="dc-spacer"></span>
+  <a class="dc-btn" href="../index.html#squiz">상세 · 트러블슈팅</a>
   <button class="dc-btn" id="btnHome">처음으로</button>
 </div>
 
@@ -1286,29 +1297,63 @@ function showToast(msg) {
 }
 
 /* =============================================================================
-   네비게이션
+   해시 라우팅
+   -----------------------------------------------------------------------------
+   URL 해시를 화면의 단일 출처로 삼는다. 모든 이동은 location.hash 변경 →
+   hashchange → applyHash() → render() 순서로 흐르므로, 브라우저 뒤로가기가
+   앱 내부 이동과 그대로 맞물린다. 마지막 뒤로가기는 포트폴리오로 돌아간다.
    ============================================================================= */
-function go(screen, opts) {
-  opts = opts || {};
-  state.screen = screen;
-  if (opts.courseId !== undefined) state.courseId = opts.courseId;
-  if (opts.sectionNumber !== undefined) state.sectionNumber = opts.sectionNumber;
+const ROUTES = [
+  { re: /^\/quiz$/,                                    screen: 'game' },
+  { re: /^\/quiz-practice$/,                           screen: 'courses' },
+  { re: /^\/quiz-practice\/(\d+)$/,                    screen: 'detail' },
+  { re: /^\/continuous-quiz\/(\d+)\/section\/(\d+)$/,  screen: 'session' },
+  { re: /^\/quiz-contest$/,                            screen: 'contest' },
+  { re: /^\/quiz-commentle$/,                          screen: 'commentle' },
+];
+
+/** 해시를 바꿔 이동한다 — 히스토리에 한 칸 쌓인다 */
+function go(path) {
+  if (location.hash === '#' + path) { render(); return; }
+  location.hash = path;   // hashchange → applyHash → render
+}
+
+/** 현재 해시를 읽어 상태에 반영한다 (뒤로/앞으로, 직접 진입 포함) */
+function applyHash() {
+  const path = location.hash.replace(/^#/, '') || '/quiz';
+
+  let matched = null, m = null;
+  for (let i = 0; i < ROUTES.length; i++) {
+    m = path.match(ROUTES[i].re);
+    if (m) { matched = ROUTES[i]; break; }
+  }
+  if (!matched) { location.replace('#/quiz'); return; }
+
+  if (matched.screen === 'detail') {
+    const id = Number(m[1]);
+    if (!getCourse(id)) { location.replace('#/quiz-practice'); return; }
+    state.courseId = id;
+    state.screen = 'detail';
+
+  } else if (matched.screen === 'session') {
+    const id = Number(m[1]);
+    if (!getCourse(id)) { location.replace('#/quiz-practice'); return; }
+    state.courseId = id;
+    state.sectionNumber = Number(m[2]);
+    // 앞으로가기나 새로고침으로 들어온 경우 세션을 새로 구성한다
+    // (진행 중이던 세션은 URL에 담기지 않으므로 복원할 수 없다)
+    if (state.screen !== 'session') prepareSession(id, state.sectionNumber, state.limit);
+    state.screen = 'session';
+
+  } else {
+    state.screen = matched.screen;
+  }
+
   window.scrollTo(0, 0);
   render();
 }
 
-function routeString() {
-  switch (state.screen) {
-    case 'game': return '/quiz';
-    case 'courses': return '/quiz-practice';
-    case 'detail': return '/quiz-practice/' + state.courseId;
-    case 'session':
-    case 'complete': return '/continuous-quiz/' + state.courseId + '/section/' + state.sectionNumber;
-    case 'commentle': return '/quiz-commentle';
-    case 'contest': return '/quiz-contest';
-    default: return '/quiz';
-  }
-}
+window.addEventListener('hashchange', applyHash);
 
 /* =============================================================================
    화면 1 — QuizGameSelection (/quiz)
@@ -1448,10 +1493,10 @@ function renderCourseList() {
     '<div class="screen list-screen"><div class="wrap-6xl">' +
       '<div class="page-nav">' +
         '<div class="breadcrumb">' +
-          '<a data-nav="game">퀴즈</a><span class="sep">/</span><span class="current">퀴즈 연습</span>' +
+          '<a data-nav="/quiz">퀴즈</a><span class="sep">/</span><span class="current">퀴즈 연습</span>' +
         '</div>' +
         '<div class="page-nav-row">' +
-          '<button class="btn btn-ghost btn-sm" data-nav="game">' + icon('arrowLeft', 18) + '</button>' +
+          '<button class="btn btn-ghost btn-sm" data-nav="/quiz">' + icon('arrowLeft', 18) + '</button>' +
           '<h1 class="page-nav-title">퀴즈 연습</h1>' +
         '</div>' +
       '</div>' +
@@ -1499,12 +1544,12 @@ function renderCourseDetail() {
     '<div class="screen list-screen"><div class="wrap-4xl">' +
       '<div class="page-nav">' +
         '<div class="breadcrumb">' +
-          '<a data-nav="game">퀴즈</a><span class="sep">/</span>' +
-          '<a data-nav="courses">퀴즈 연습</a><span class="sep">/</span>' +
+          '<a data-nav="/quiz">퀴즈</a><span class="sep">/</span>' +
+          '<a data-nav="/quiz-practice">퀴즈 연습</a><span class="sep">/</span>' +
           '<span class="current">' + esc(course.name) + '</span>' +
         '</div>' +
         '<div class="page-nav-row">' +
-          '<button class="btn btn-ghost btn-sm" data-nav="courses">' + icon('arrowLeft', 18) + '</button>' +
+          '<button class="btn btn-ghost btn-sm" data-nav="/quiz-practice">' + icon('arrowLeft', 18) + '</button>' +
           '<h1 class="page-nav-title">' + esc(course.name) + '</h1>' +
         '</div>' +
       '</div>' +
@@ -1569,8 +1614,12 @@ function shuffle(arr) {
   return arr;
 }
 
-function startSession(courseId, sectionNumber, limit) {
+/** 세션 상태를 새로 구성한다 (히스토리는 건드리지 않는다) */
+function prepareSession(courseId, sectionNumber, limit) {
   const course = getCourse(courseId);
+  state.courseId = courseId;
+  state.sectionNumber = sectionNumber;
+  state.limit = limit;
   state.queue = buildQueue(course, limit);
   state.index = 0;
   state.solvedCount = 0;
@@ -1582,8 +1631,14 @@ function startSession(courseId, sectionNumber, limit) {
   state.feedbackData = null;
   state.showSkipConfirm = false;
   state.summary = null;
+  state.screen = 'session';
   timer.start();
-  go('session', { courseId: courseId, sectionNumber: sectionNumber });
+}
+
+/** 세션을 시작하고 히스토리에 한 칸 쌓는다 */
+function startSession(courseId, sectionNumber, limit) {
+  prepareSession(courseId, sectionNumber, limit);
+  go('/continuous-quiz/' + courseId + '/section/' + sectionNumber);
 }
 
 function currentQuestion() {
@@ -1648,7 +1703,7 @@ function renderSession() {
     '<div class="screen session-screen">' +
       '<header class="session-header"><div class="session-header-inner">' +
         '<div class="breadcrumb">' +
-          '<a data-nav="game">퀴즈</a><span class="sep">/</span><span class="current">연속 학습</span>' +
+          '<a data-nav="/quiz">퀴즈</a><span class="sep">/</span><span class="current">연속 학습</span>' +
         '</div>' +
         '<div class="sh-row">' +
           '<button class="btn btn-ghost btn-sm" data-session-exit>' + icon('arrowLeft', 18) + '나가기</button>' +
@@ -1782,7 +1837,7 @@ function renderComingSoon(title, desc) {
     '<div class="screen soon-screen">' +
       '<h2 class="soon-title">' + esc(title) + '</h2>' +
       '<p class="soon-desc">' + esc(desc) + '</p>' +
-      '<button class="btn btn-primary btn-md" data-nav="game">' + icon('arrowLeft', 18) + '퀴즈 홈으로</button>' +
+      '<button class="btn btn-primary btn-md" data-nav="/quiz">' + icon('arrowLeft', 18) + '퀴즈 홈으로</button>' +
     '</div>';
 }
 
@@ -1809,7 +1864,7 @@ function render() {
   if (state.toast) html += '<div class="toast">' + esc(state.toast) + '</div>';
 
   app.innerHTML = html;
-  routeLabel.textContent = routeString();
+  routeLabel.textContent = location.hash || '#/quiz';
 
   if (state.screen === 'game') { startTyping(); bindMascot(); }
   if (state.screen === 'session') focusInput();
@@ -1898,7 +1953,11 @@ function handleNextQuestion() {
       incorrectCount: state.solvedCount - state.correctCount,
       averageResponseTimeMs: avgTime(),
     };
-    go('complete');
+    // 완료 화면은 세션의 결과이므로 히스토리를 새로 쌓지 않는다.
+    // 여기서 뒤로가기를 누르면 세션을 반복하지 않고 코스 상세로 돌아간다.
+    state.screen = 'complete';
+    window.scrollTo(0, 0);
+    render();
     return;
   }
   timer.start();
@@ -1930,9 +1989,9 @@ app.addEventListener('click', function (e) {
   const gameCard = t.closest('[data-game]');
   if (gameCard) {
     const id = gameCard.getAttribute('data-game');
-    if (id === 'practice') go('courses');
-    else if (id === 'contest') go('contest');
-    else go('commentle');
+    if (id === 'practice') go('/quiz-practice');
+    else if (id === 'contest') go('/quiz-contest');
+    else go('/quiz-commentle');
     return;
   }
 
@@ -1942,7 +2001,7 @@ app.addEventListener('click', function (e) {
 
   // 코스 카드
   const courseCard = t.closest('[data-course]');
-  if (courseCard) { go('detail', { courseId: Number(courseCard.getAttribute('data-course')) }); return; }
+  if (courseCard) { go('/quiz-practice/' + Number(courseCard.getAttribute('data-course'))); return; }
 
   // 섹션 클릭 → 학습량 설정 모달
   const sectionBtn = t.closest('[data-section]');
@@ -1999,9 +2058,14 @@ app.addEventListener('click', function (e) {
   }
   if (t.closest('[data-skip-confirm]')) { handleSkipConfirm(); return; }
 
-  if (t.closest('[data-session-exit]')) { go('detail'); return; }
-  if (t.closest('[data-return-course]')) { go('detail'); return; }
-  if (t.closest('[data-retry]')) { startSession(state.courseId, state.sectionNumber, state.limit); return; }
+  if (t.closest('[data-session-exit]')) { go('/quiz-practice/' + state.courseId); return; }
+  if (t.closest('[data-return-course]')) { go('/quiz-practice/' + state.courseId); return; }
+  // 다시 학습하기 — 같은 섹션이라 URL이 바뀌지 않으므로 히스토리를 쌓지 않는다
+  if (t.closest('[data-retry]')) {
+    prepareSession(state.courseId, state.sectionNumber, state.limit);
+    render();
+    return;
+  }
 });
 
 // 단답형 입력
@@ -2058,13 +2122,15 @@ function syncFeedbackKeyBinding() {
   });
 });
 
-document.getElementById('btnHome').addEventListener('click', function () { go('game'); });
+document.getElementById('btnHome').addEventListener('click', function () { go('/quiz'); });
 
 // render를 감싸 피드백 키 바인딩을 동기화
 const _render = render;
 render = function () { _render(); syncFeedbackKeyBinding(); };
 
-render();
+// 진입 시 해시가 없으면 /quiz 를 기본값으로 — 히스토리를 더럽히지 않도록 replace 사용
+if (!location.hash) location.replace('#/quiz');
+applyHash();
 </script>
 </body>
 </html>
