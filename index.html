@@ -191,6 +191,57 @@
   .list-item:last-child { border-bottom: none; }
   .list-item .li-title { font-weight: 600; font-size: 14.5px; }
   .list-item .li-sub { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+  button.list-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    width: 100%; text-align: left; font: inherit; color: var(--text);
+    background: none; border: none; border-bottom: 1px solid var(--border); cursor: pointer;
+  }
+  button.list-item:last-child { border-bottom: none; }
+  button.list-item .li-more { font-size: 12.5px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+  button.list-item:hover .li-title, button.list-item:hover .li-more { color: var(--accent); }
+  button.list-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+
+  /* 성적 모달 */
+  .tr-summary {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; margin: 18px 0 22px;
+  }
+  @media (max-width: 560px) { .tr-summary { grid-template-columns: repeat(2, 1fr); } }
+  .tr-summary div span { display: block; font-size: 11.5px; color: var(--text-dim); letter-spacing: .03em; }
+  .tr-summary div strong { font-size: 15px; font-weight: 700; }
+  .tr-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+  @media (max-width: 620px) { .tr-cards { grid-template-columns: 1fr; } }
+  .tr-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 2px;
+  }
+  .tr-card.accent { border-color: var(--accent); background: var(--accent-soft); }
+  .tr-card .tr-card-label { font-size: 11.5px; color: var(--text-dim); letter-spacing: .03em; }
+  .tr-card .tr-card-gpa { font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .tr-card .tr-card-gpa em { font-size: 12.5px; font-weight: 600; font-style: normal; color: var(--text-dim); }
+  .tr-card .tr-card-note { font-size: 11.5px; color: var(--text-dim); margin-top: 2px; }
+  .tr-card .tr-card-trend {
+    display: flex; align-items: flex-end; gap: 6px; margin-top: auto; padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .tr-card-trend .trend-step { display: flex; flex-direction: column; gap: 1px; }
+  .tr-card-trend .trend-step span { font-size: 10.5px; color: var(--text-dim); letter-spacing: .02em; }
+  .tr-card-trend .trend-step strong { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .tr-card-trend .trend-arrow { font-size: 11px; color: var(--text-dim); padding-bottom: 1px; }
+  .tr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+  @media (max-width: 640px) { .tr-grid { grid-template-columns: 1fr; } }
+  .tr-term h4 {
+    font-size: 13px; font-weight: 700; margin: 0 0 6px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  }
+  .tr-term h4 span { font-size: 11.5px; font-weight: 600; color: var(--accent); }
+  .tr-term table { border: none; background: none; border-radius: 0; font-size: 13px; }
+  .tr-term td { padding: 4px 0; border-bottom: 1px solid var(--border); vertical-align: baseline; }
+  .tr-term tr:last-child td { border-bottom: none; }
+  .tr-term .tr-cat { color: var(--text-dim); font-size: 11px; width: 42px; white-space: nowrap; }
+  .tr-term .tr-cr { text-align: right; color: var(--text-dim); font-size: 12px; width: 28px; }
+  .tr-term .tr-gr { text-align: right; font-family: "SF Mono", monospace; font-size: 12.5px; width: 42px; }
 
   footer { padding: 40px 0 60px; text-align: center; color: var(--text-dim); font-size: 13px; }
   footer .links { justify-content: center; }
@@ -280,7 +331,7 @@
 
   <section id="projects">
     <h2 class="section-title">프로젝트</h2>
-    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다. 아이다와 SQUIZ는 카드를 클릭하면 데모를 직접 체험할 수 있습니다.</p>
+    <p class="section-sub">SSAFY(삼성 청년 SW·AI 아카데미) 6인 팀 프로젝트 3건입니다. 카드를 클릭하면 각 프로젝트의 데모를 직접 체험할 수 있습니다.</p>
 
     <div class="project-gallery">
       <a class="gallery-card" href="demos/aida.html">
@@ -291,13 +342,13 @@
         <div class="gallery-more">데모 체험하기 →</div>
       </a>
 
-      <button class="gallery-card" onclick="openProject('newsbara')">
+      <a class="gallery-card" href="demos/newsbara.html">
         <div class="gallery-thumb">뉴스바라</div>
         <div class="gallery-title">뉴스바라 <span class="award-badge">🥉 3등</span></div>
         <div class="gallery-meta">2026.02 – 2026.03 · 담당: Backend, Infra</div>
         <div class="gallery-desc">관심 키워드와 기사 임베딩 기반으로 개인화된 IT 뉴스를 추천하는 큐레이션 서비스</div>
-        <div class="gallery-more">자세히 보기 →</div>
-      </button>
+        <div class="gallery-more">데모 체험하기 →</div>
+      </a>
 
       <a class="gallery-card" href="demos/squiz.html">
         <div class="gallery-thumb">SQUIZ</div>
@@ -461,11 +512,151 @@
       </div>
       <div>
         <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:8px;">교육</h3>
-        <div class="list-item"><div class="li-title">삼성 청년 SW·AI 아카데미(SSAFY) 14기</div><div class="li-sub">2025.07 – 2026.06</div></div>
+        <div class="list-item"><div class="li-title">삼성 청년 SW·AI 아카데미(SSAFY) 14기</div><div class="li-sub">삼성전자 · 2025.07 – 2026.06</div></div>
         <div class="list-item"><div class="li-title">에티버스러닝 유니티 부트캠프 1기</div><div class="li-sub">대한상공회의소 · 2023.06 – 2023.12</div></div>
-        <div class="list-item"><div class="li-title">한국외국어대학교</div><div class="li-sub">철학과 졸업, 컴퓨터전자시스템공학과 복수전공 · 2018.02 – 2022.08</div></div>
+        <button class="list-item" onclick="openProject('transcript')">
+          <span>
+            <span class="li-title" style="display:block;">한국외국어대학교</span>
+            <span class="li-sub" style="display:block;">철학과 졸업, 컴퓨터전자시스템공학과 복수전공 · 2018.02 – 2022.08</span>
+          </span>
+          <span class="li-more">성적 보기 →</span>
+        </button>
       </div>
     </div>
+
+    <template id="tpl-transcript">
+      <div class="project-head">
+        <div class="project-title">한국외국어대학교 성적</div>
+      </div>
+      <div class="project-meta">철학과 졸업 · 컴퓨터전자시스템공학과 복수전공(이중) · 2018.02 – 2022.08</div>
+      <div class="tr-summary">
+        <div><span>총 평점평균</span><strong>3.62 / 4.50</strong></div>
+        <div><span>백분율</span><strong>90.90</strong></div>
+        <div><span>취득 학점</span><strong>134</strong></div>
+        <div><span>1전공 / 이중 / 교양</span><strong>56 / 42 / 36</strong></div>
+      </div>
+      <div class="tr-cards">
+        <div class="tr-card accent">
+          <div class="tr-card-label">전공 전체 평점</div>
+          <div class="tr-card-gpa">3.65 <em>/ 4.50</em></div>
+          <div class="tr-card-note">1전공 + 이중전공 96학점</div>
+        </div>
+        <div class="tr-card">
+          <div class="tr-card-label">1전공 · 철학</div>
+          <div class="tr-card-gpa">3.94 <em>/ 4.50</em></div>
+          <div class="tr-card-note">54학점</div>
+        </div>
+        <div class="tr-card">
+          <div class="tr-card-label">이중전공 · 컴퓨터전자시스템공학</div>
+          <div class="tr-card-gpa">3.28 <em>/ 4.50</em></div>
+          <div class="tr-card-note">42학점</div>
+          <div class="tr-card-trend">
+            <div class="trend-step"><span>2019</span><strong>2.62</strong></div>
+            <div class="trend-arrow">→</div>
+            <div class="trend-step"><span>2020</span><strong>3.40</strong></div>
+            <div class="trend-arrow">→</div>
+            <div class="trend-step"><span>2021</span><strong>3.70</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="tr-grid">
+        <section class="tr-term">
+          <h4>2018년도 1학기 <span>3.16 · 15학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공R</td><td>철학입문</td><td class="tr-cr">3</td><td class="tr-gr">D+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>HUFS Survival English 1</td><td class="tr-cr">2</td><td class="tr-gr">PASS</td></tr>
+            <tr><td class="tr-cat">교양</td><td>교양영어 1</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>근대유럽의 사상과 현대사</td><td class="tr-cr">2</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>동아시아사의 이해</td><td class="tr-cr">2</td><td class="tr-gr">B0</td></tr>
+            <tr><td class="tr-cat">교양</td><td>미네르바 인문강좌 1: 인간과 문명</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>신입생 세미나(철학)</td><td class="tr-cr">1</td><td class="tr-gr">PASS</td></tr>
+            <tr><td class="tr-cat">교양</td><td>종교철학입문</td><td class="tr-cr">2</td><td class="tr-gr">B0</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2018년도 2학기 <span>2.50 · 8학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공R</td><td>중국고·중세철학사</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>한국사입문</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>HUFS Survival English 2</td><td class="tr-cr">2</td><td class="tr-gr">PASS</td></tr>
+            <tr><td class="tr-cat">교양R</td><td>미네르바 인문(2) 읽기와 토의·토론: 인간의 삶</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양R</td><td>미디어와 현대사회</td><td class="tr-cr">2</td><td class="tr-gr">D+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>인간의 언어, 기호, 그리고 상징</td><td class="tr-cr">2</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>진로설계 세미나(철학)</td><td class="tr-cr">1</td><td class="tr-gr">PASS</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2019년도 1학기 <span>3.00 · 16학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>서양근대철학사</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>중국근·현대철학사</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>이산수학</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>파이썬 프로그래밍</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>HUFS Career Vision Mentoring(진로/취·창업)</td><td class="tr-cr">–</td><td class="tr-gr">PASS</td></tr>
+            <tr><td class="tr-cat">교양</td><td>세계 주요 문화와 통번역의 역할</td><td class="tr-cr">3</td><td class="tr-gr">PASS</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2019년도 2학기 <span>3.64 · 21학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>윤리학</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>인식론</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>중국고·중세철학사</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>디지털공학기초</td><td class="tr-cr">3</td><td class="tr-gr">B0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>컴퓨터프로그래밍 및 실습</td><td class="tr-cr">3</td><td class="tr-gr">C+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>대학영어 2</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">교양</td><td>미네르바 인문(2) 읽기와 토의·토론: 인간의 삶</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2020년도 1학기 <span>3.85 · 20학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>논리학</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>언어와 인간</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>응용윤리학</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>논리회로 및 실험</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>자료구조 및 실습</td><td class="tr-cr">3</td><td class="tr-gr">B0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>컴퓨터개론 및 실습</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">교양</td><td>육아와 아동심리</td><td class="tr-cr">2</td><td class="tr-gr">A0</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2020년도 2학기 <span>3.97 · 22학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>HEIDEGGER 철학</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>독일현대철학</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>서양고·중세철학사</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>프랑스철학 원전강독 실습</td><td class="tr-cr">2</td><td class="tr-gr">PASS</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>한국윤리사상</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>데이터베이스</td><td class="tr-cr">3</td><td class="tr-gr">B0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>컴퓨터네트워크</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">교양</td><td>컴퓨터활용</td><td class="tr-cr">2</td><td class="tr-gr">A+</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2021년도 1학기 <span>3.76 · 17학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>철학입문</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>객체지향프로그래밍</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>운영체제</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>웹프로그래밍</td><td class="tr-cr">3</td><td class="tr-gr">A0</td></tr>
+            <tr><td class="tr-cat">이중</td><td>컴퓨터비전</td><td class="tr-cr">3</td><td class="tr-gr">B0</td></tr>
+            <tr><td class="tr-cat">교양</td><td>법으로 풀어가는 정치</td><td class="tr-cr">2</td><td class="tr-gr">B+</td></tr>
+          </table>
+        </section>
+        <section class="tr-term">
+          <h4>2021년도 2학기 <span>3.90 · 15학점</span></h4>
+          <table>
+            <tr><td class="tr-cat">1전공</td><td>동서비교윤리학</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>불교철학</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>생명윤리학</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">1전공</td><td>실존철학</td><td class="tr-cr">3</td><td class="tr-gr">A+</td></tr>
+            <tr><td class="tr-cat">이중</td><td>정보보안</td><td class="tr-cr">3</td><td class="tr-gr">B+</td></tr>
+          </table>
+        </section>
+      </div>
+      <p class="note">R 표기는 재수강 과목이며, 전공별 평점은 재수강·PASS 과목을 제외하고 산출했습니다. 학기 옆 수치는 해당 학기 평점평균과 취득 학점입니다.</p>
+    </template>
   </section>
 
   <footer id="contact">
@@ -492,10 +683,11 @@
   const modalBody = document.getElementById('modalBody');
 
   // 상세·트러블슈팅 모달.
-  // 데모가 있는 아이다·SQUIZ 카드는 모달이 아니라 데모 페이지로 직접 이동한다 —
+  // 프로젝트 카드는 모달이 아니라 데모 페이지로 직접 이동한다 —
   // 모달 안에 iframe으로 띄우면 뒤로가기가 "데모 안에서 한 단계 뒤로"인지
   // "모달 닫기"인지 모호해지지만, 일반 페이지 이동이면 히스토리가 하나로 합쳐진다.
-  // 두 프로젝트의 상세는 데모 페이지의 "상세 · 트러블슈팅" 링크(#aida, #squiz)로 들어온다.
+  // 데모 안의 "상세 · 트러블슈팅"은 데모 페이지가 같은 내용을 자체 시트로 띄운다.
+  // 여기 남은 해시 처리(#aida, #newsbara, #squiz)는 외부에서 직접 링크로 들어온 경우를 위한 것이다.
   function openProject(id) {
     const tpl = document.getElementById('tpl-' + id);
     if (!tpl) return;

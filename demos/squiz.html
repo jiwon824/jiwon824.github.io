@@ -737,6 +737,101 @@ button { font-family: inherit; }
 .flex-1 { flex: 1; }
 .text-center { text-align: center; }
 </style>
+<style>
+/* =============================================================================
+   상세 · 트러블슈팅 시트 — 데모 크롬 레이어의 일부
+   앱 테마와 무관하게 크롬(#16181d)과 같은 계열의 어두운 팔레트를 쓴다.
+   "이건 앱 화면이 아니라 프로젝트 설명"이라는 걸 색으로 구분하기 위함.
+   ============================================================================= */
+.pf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px;
+  background: rgba(8, 10, 14, 0.62);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+.pf-overlay.open { opacity: 1; pointer-events: auto; }
+.pf-box {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  max-height: 84vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 30px;
+  border: 1px solid #262b34;
+  border-radius: 16px;
+  background: #171a21;
+  color: #e7e9ee;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  transform: translateY(-10px);
+  transition: transform 150ms ease;
+  text-align: left;
+}
+.pf-overlay.open .pf-box { transform: translateY(0); }
+.pf-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #262b34;
+  border-radius: 999px;
+  background: #14171d;
+  color: #97a1b0;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.pf-close:hover { color: #e7e9ee; border-color: #7c93ff; }
+
+.pf-title { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-right: 44px; margin-bottom: 6px; }
+.pf-badge { font-size: 12px; font-weight: 600; color: #7c93ff; background: #1c2340; padding: 3px 9px; border-radius: 999px; }
+.pf-meta { font-size: 13px; color: #97a1b0; margin-bottom: 14px; }
+.pf-desc { font-size: 14.5px; color: #97a1b0; margin-bottom: 14px; }
+.pf-list { margin: 0 0 14px; padding-left: 20px; font-size: 14px; }
+.pf-list li { margin-bottom: 6px; }
+.pf-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.pf-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-tag { background: #1e222b; border: 1px solid #262b34; color: #e7e9ee; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; }
+.pf-link { color: #7c93ff; text-decoration: none; font-size: 14px; white-space: nowrap; }
+.pf-link:hover { text-decoration: underline; }
+.pf-overlay code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.92em; }
+
+.pf-h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #97a1b0; margin: 26px 0 10px; font-weight: 700; }
+.pf-dive { border: 1px solid #262b34; border-radius: 14px; background: #14171d; margin-bottom: 12px; overflow: hidden; }
+.pf-dive summary { cursor: pointer; list-style: none; padding: 16px 20px; font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pf-dive summary::-webkit-details-marker { display: none; }
+.pf-dive summary .pf-chev { color: #97a1b0; font-size: 13px; transition: transform 150ms ease; }
+.pf-dive[open] summary .pf-chev { transform: rotate(90deg); }
+.pf-dive-body { padding: 0 20px 20px; font-size: 14.5px; color: #97a1b0; border-top: 1px solid #262b34; }
+.pf-dive-body h4 { color: #e7e9ee; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; margin: 18px 0 6px; }
+.pf-dive-body p { margin: 0 0 6px; }
+.pf-limit { background: #0f1115; border-left: 3px solid #7c93ff; padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 6px; }
+.pf-stat { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13.5px; color: #e7e9ee; background: #0f1115; padding: 8px 12px; border-radius: 8px; display: inline-block; margin-top: 4px; }
+
+.pf-foot-note { margin-top: 22px; padding-top: 16px; border-top: 1px solid #262b34; font-size: 12.5px; color: #97a1b0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+html.pf-lock, html.pf-lock body { overflow: hidden; }
+
+@media (max-width: 640px) {
+  .pf-overlay { padding: 20px 12px; }
+  .pf-box { padding: 24px 18px; max-height: 88vh; }
+}
+</style>
 </head>
 <body>
 
@@ -748,7 +843,7 @@ button { font-family: inherit; }
   <span class="dc-label">퀴즈 도메인 데모</span>
   <span class="dc-route" id="routeLabel">#/quiz</span>
   <span class="dc-spacer"></span>
-  <a class="dc-btn" href="../index.html#squiz">상세 · 트러블슈팅</a>
+  <button class="dc-btn" id="btnDetail">상세 · 트러블슈팅</button>
   <button class="dc-btn" id="btnHome">처음으로</button>
 </div>
 
@@ -2132,5 +2227,85 @@ render = function () { _render(); syncFeedbackKeyBinding(); };
 if (!location.hash) location.replace('#/quiz');
 applyHash();
 </script>
+<div class="pf-overlay" id="pfOverlay">
+  <div class="pf-box" role="dialog" aria-modal="true" aria-label="프로젝트 상세 및 트러블슈팅">
+    <button class="pf-close" id="pfClose" aria-label="닫기">✕</button>
+    <div class="pf-title">SQUIZ</div>
+    <div class="pf-meta">2026.01.05 – 2026.02.09 (5주) · 6인 팀 (FE 1 · BE 4 · AI/Infra 1) · 담당: Full Stack (퀴즈 도메인)</div>
+    <div class="pf-desc">
+      스터디 생성부터 퀴즈 학습, 복습, 통계까지 연결한 FSRS 기반 AI 학습 플랫폼입니다.
+    </div>
+    <ul class="pf-list">
+      <li>퀴즈 코스·연속 퀴즈·복습·통계 API 구현, 답안 제출부터 임시저장·재개까지 end-to-end 연결</li>
+      <li>클라이언트가 보내던 <code>isCorrect</code>를 제거하고 서버가 정답 데이터와 문제 유형 기준으로 직접 채점하도록 재설계 — 상세는 아래 트러블슈팅 참고</li>
+      <li>복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고 FSRS로 다음 복습 시점 계산</li>
+      <li>attemptId 기반 재개 흐름으로 재접속 후 답안·진행 상태를 정확히 복구</li>
+      <li>QueryDSL로 오답 목록 조회·정렬·페이지네이션 처리</li>
+    </ul>
+    <div class="pf-footer">
+      <div class="pf-tags">
+        <span class="pf-tag">Java 21</span><span class="pf-tag">Spring Boot 3.2</span><span class="pf-tag">JPA</span>
+        <span class="pf-tag">QueryDSL</span><span class="pf-tag">MySQL</span><span class="pf-tag">React</span><span class="pf-tag">TypeScript</span>
+      </div>
+      <a class="pf-link" href="https://github.com/jiwon824/squiz" target="_blank" rel="noopener">GitHub →</a>
+    </div>
+
+    <h3 class="pf-h3">트러블슈팅 딥다이브</h3>
+    <details class="pf-dive">
+      <summary><span>왜 클라이언트를 믿지 않는가 — 서버 중심 채점</span><span class="pf-chev">▸</span></summary>
+      <div class="pf-dive-body">
+        <h4>상황</h4>
+        <p>답안 제출 단계에서 클라이언트가 채점 결과(<code>isCorrect</code>)를 직접 서버로 전달하는 구조였습니다.</p>
+        <h4>문제 인식</h4>
+        <p>요청 값을 조작하면 채점 결과를 임의로 바꿀 수 있어, 추천·복습 서비스의 핵심 신뢰성이 깨질 수 있는 구조였습니다.</p>
+        <h4>해결</h4>
+        <p>클라이언트는 선택한 답안 값만 전달하고, 서버가 이를 Set으로 파싱해 보유한 정답과 비교하는 방식으로 직접 채점하도록 변경했습니다. 이후 요구사항이 문제집 방식에서 연속 퀴즈로 바뀌자, 진행 상태·다음 문제 선택·섹션 접근 규칙까지 서버 중심 API로 재설계했습니다.</p>
+        <h4>부속 설계</h4>
+        <p>현재 복습 상태(<code>user_review_items</code>)와 풀이 이력(<code>user_review_log</code>)을 분리하고, FSRS 알고리즘으로 다음 복습 시점을 계산해 갱신했습니다.</p>
+        <h4>결과</h4>
+        <p class="pf-stat">요청 조작으로 채점 결과를 변경할 수 없는 구조 확보</p>
+      </div>
+    </details>
+      <div class="pf-foot-note">
+        <span>이 내용은 포트폴리오의 프로젝트 상세와 동일합니다.</span>
+        <a class="pf-link" href="../index.html#projects">포트폴리오에서 전체 보기 →</a>
+      </div>
+  </div>
+</div>
+
+<script>
+/* 상세 · 트러블슈팅 시트 — 데모를 벗어나지 않고 같은 화면 위에서 연다 */
+(function () {
+  const pfOverlay = document.getElementById('pfOverlay');
+  const pfOpen = document.getElementById('btnDetail');
+
+  function openDetail() {
+    pfOverlay.classList.add('open');
+    document.documentElement.classList.add('pf-lock');
+    pfOverlay.querySelector('.pf-box').scrollTop = 0;
+    document.getElementById('pfClose').focus();
+  }
+
+  function closeDetail() {
+    pfOverlay.classList.remove('open');
+    document.documentElement.classList.remove('pf-lock');
+    if (pfOpen) pfOpen.focus();
+  }
+
+  if (pfOpen) pfOpen.addEventListener('click', openDetail);
+  document.getElementById('pfClose').addEventListener('click', closeDetail);
+  pfOverlay.addEventListener('click', function (e) {
+    if (e.target === pfOverlay) closeDetail();
+  });
+
+  // 캡처 단계에서 잡아 데모 자체의 ESC 처리(퀴즈 모달 등)보다 먼저 반응한다
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !pfOverlay.classList.contains('open')) return;
+    e.stopPropagation();
+    closeDetail();
+  }, true);
+})();
+</script>
+
 </body>
 </html>

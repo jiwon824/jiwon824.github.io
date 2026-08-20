@@ -4219,6 +4219,101 @@ button { font-family: inherit; }
 }
 .rag-evidence-rows dd { margin: 0; }
 </style>
+<style>
+/* =============================================================================
+   상세 · 트러블슈팅 시트 — 데모 크롬 레이어의 일부
+   앱 테마와 무관하게 크롬(#16181d)과 같은 계열의 어두운 팔레트를 쓴다.
+   "이건 앱 화면이 아니라 프로젝트 설명"이라는 걸 색으로 구분하기 위함.
+   ============================================================================= */
+.pf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px;
+  background: rgba(8, 10, 14, 0.62);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+.pf-overlay.open { opacity: 1; pointer-events: auto; }
+.pf-box {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  max-height: 84vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 30px;
+  border: 1px solid #262b34;
+  border-radius: 16px;
+  background: #171a21;
+  color: #e7e9ee;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  transform: translateY(-10px);
+  transition: transform 150ms ease;
+  text-align: left;
+}
+.pf-overlay.open .pf-box { transform: translateY(0); }
+.pf-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #262b34;
+  border-radius: 999px;
+  background: #14171d;
+  color: #97a1b0;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.pf-close:hover { color: #e7e9ee; border-color: #7c93ff; }
+
+.pf-title { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-right: 44px; margin-bottom: 6px; }
+.pf-badge { font-size: 12px; font-weight: 600; color: #7c93ff; background: #1c2340; padding: 3px 9px; border-radius: 999px; }
+.pf-meta { font-size: 13px; color: #97a1b0; margin-bottom: 14px; }
+.pf-desc { font-size: 14.5px; color: #97a1b0; margin-bottom: 14px; }
+.pf-list { margin: 0 0 14px; padding-left: 20px; font-size: 14px; }
+.pf-list li { margin-bottom: 6px; }
+.pf-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.pf-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-tag { background: #1e222b; border: 1px solid #262b34; color: #e7e9ee; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; }
+.pf-link { color: #7c93ff; text-decoration: none; font-size: 14px; white-space: nowrap; }
+.pf-link:hover { text-decoration: underline; }
+.pf-overlay code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.92em; }
+
+.pf-h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #97a1b0; margin: 26px 0 10px; font-weight: 700; }
+.pf-dive { border: 1px solid #262b34; border-radius: 14px; background: #14171d; margin-bottom: 12px; overflow: hidden; }
+.pf-dive summary { cursor: pointer; list-style: none; padding: 16px 20px; font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pf-dive summary::-webkit-details-marker { display: none; }
+.pf-dive summary .pf-chev { color: #97a1b0; font-size: 13px; transition: transform 150ms ease; }
+.pf-dive[open] summary .pf-chev { transform: rotate(90deg); }
+.pf-dive-body { padding: 0 20px 20px; font-size: 14.5px; color: #97a1b0; border-top: 1px solid #262b34; }
+.pf-dive-body h4 { color: #e7e9ee; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; margin: 18px 0 6px; }
+.pf-dive-body p { margin: 0 0 6px; }
+.pf-limit { background: #0f1115; border-left: 3px solid #7c93ff; padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 6px; }
+.pf-stat { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13.5px; color: #e7e9ee; background: #0f1115; padding: 8px 12px; border-radius: 8px; display: inline-block; margin-top: 4px; }
+
+.pf-foot-note { margin-top: 22px; padding-top: 16px; border-top: 1px solid #262b34; font-size: 12.5px; color: #97a1b0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+html.pf-lock, html.pf-lock body { overflow: hidden; }
+
+@media (max-width: 640px) {
+  .pf-overlay { padding: 20px 12px; }
+  .pf-box { padding: 24px 18px; max-height: 88vh; }
+}
+</style>
 </head>
 <body>
 
@@ -4232,7 +4327,7 @@ button { font-family: inherit; }
   <span class="dc-label" id="questionLabel"></span>
   <span class="dc-route" id="routeLabel">#/rag · 1/7</span>
   <span class="dc-spacer"></span>
-  <a class="dc-btn" href="../index.html#aida">상세 · 트러블슈팅</a>
+  <button class="dc-btn" id="btnDetail">상세 · 트러블슈팅</button>
   <button class="dc-btn" id="btnHome">처음으로</button>
 </div>
 
@@ -4988,6 +5083,85 @@ document.getElementById('questionLabel').textContent = '질문: “' + QUESTION 
 
 render();
 applyGate();
+</script>
+
+<div class="pf-overlay" id="pfOverlay">
+  <div class="pf-box" role="dialog" aria-modal="true" aria-label="프로젝트 상세 및 트러블슈팅">
+    <button class="pf-close" id="pfClose" aria-label="닫기">✕</button>
+    <div class="pf-title">아이다 <span class="pf-badge">🥇 우수상 1등</span></div>
+    <div class="pf-meta">2026.04.06 – 2026.05.21 (7주) · 6인 팀 (FE 2 · BE 1 · Infra 1 · AI 2) · 담당: Infra, FE</div>
+    <div class="pf-desc">
+      초등학생이 AI의 오답을 직접 경험하고, 데이터를 보완하며 결과 변화를 확인하는 스토리 기반 AI 리터러시 교육 서비스입니다.
+    </div>
+    <ul class="pf-list">
+      <li>Docker Compose 기반 로컬·운영 환경을 분리하고 Nginx·HTTPS(Certbot 공유 볼륨)·백엔드 healthcheck 구성</li>
+      <li>GitLab CI 검증 단계와 EC2 자동 배포, GitLab Webhook 기반 Discord·Mattermost 알림 서버 구현</li>
+      <li>Spring Boot Actuator + Prometheus 연동으로 서비스 모니터링 환경 구성</li>
+      <li>PNG 이미지 280개를 WebP로 변환하는 pre-commit 자동화로 정적 자산 용량 36% 절감</li>
+      <li>QA 이슈의 긴급도·난이도 분류 기준 수립</li>
+    </ul>
+    <div class="pf-footer">
+      <div class="pf-tags">
+        <span class="pf-tag">Docker Compose</span><span class="pf-tag">Nginx</span><span class="pf-tag">PostgreSQL</span>
+        <span class="pf-tag">Redis</span><span class="pf-tag">GitLab CI/CD</span><span class="pf-tag">Prometheus</span>
+      </div>
+      <a class="pf-link" href="https://github.com/jiwon824/aida" target="_blank" rel="noopener">GitHub →</a>
+    </div>
+
+    <h3 class="pf-h3">트러블슈팅 딥다이브</h3>
+    <details class="pf-dive">
+      <summary><span>설정의 영속성 ≠ 데이터의 영속성 — Prometheus 데이터 유실</span><span class="pf-chev">▸</span></summary>
+      <div class="pf-dive-body">
+        <h4>상황</h4>
+        <p>운영 환경에서 <code>docker compose down/up</code>으로 재배포할 때마다 Prometheus에 쌓인 모니터링 지표가 사라졌습니다.</p>
+        <h4>원인</h4>
+        <p>Prometheus 컨테이너의 TSDB 데이터 경로가 별도 볼륨에 연결돼 있지 않아, 컨테이너 재생성 시 함께 삭제되고 있었습니다. 설정 파일은 이미지·마운트로 영속이지만, 런타임 데이터는 그렇지 않다는 것을 구분하게 된 지점입니다.</p>
+        <h4>해결</h4>
+        <p>Prometheus TSDB 경로를 named volume으로 분리해, 재배포 이후에도 지표 이력이 보존되도록 개선했습니다.</p>
+        <div class="pf-limit">
+          <b>한계:</b> Grafana 대시보드는 구성하지 않아 지표 수집까지만 진행했고, 알림 임계치·시각화는 다루지 못했습니다. k6 테스트도 health endpoint 대상 스모크 테스트(1 VU·5회) 수준이라, 실제 부하·장애 상황에 대한 검증은 진행하지 못했습니다.
+        </div>
+      </div>
+    </details>
+      <div class="pf-foot-note">
+        <span>이 내용은 포트폴리오의 프로젝트 상세와 동일합니다.</span>
+        <a class="pf-link" href="../index.html#projects">포트폴리오에서 전체 보기 →</a>
+      </div>
+  </div>
+</div>
+
+<script>
+/* 상세 · 트러블슈팅 시트 — 데모를 벗어나지 않고 같은 화면 위에서 연다 */
+(function () {
+  const pfOverlay = document.getElementById('pfOverlay');
+  const pfOpen = document.getElementById('btnDetail');
+
+  function openDetail() {
+    pfOverlay.classList.add('open');
+    document.documentElement.classList.add('pf-lock');
+    pfOverlay.querySelector('.pf-box').scrollTop = 0;
+    document.getElementById('pfClose').focus();
+  }
+
+  function closeDetail() {
+    pfOverlay.classList.remove('open');
+    document.documentElement.classList.remove('pf-lock');
+    if (pfOpen) pfOpen.focus();
+  }
+
+  if (pfOpen) pfOpen.addEventListener('click', openDetail);
+  document.getElementById('pfClose').addEventListener('click', closeDetail);
+  pfOverlay.addEventListener('click', function (e) {
+    if (e.target === pfOverlay) closeDetail();
+  });
+
+  // 캡처 단계에서 잡아 데모 자체의 ESC 처리(퀴즈 모달 등)보다 먼저 반응한다
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !pfOverlay.classList.contains('open')) return;
+    e.stopPropagation();
+    closeDetail();
+  }, true);
+})();
 </script>
 
 </body>
