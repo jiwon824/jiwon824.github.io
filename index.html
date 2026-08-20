@@ -131,10 +131,29 @@
   .gallery-card:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
   .gallery-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .gallery-thumb {
-    height: 84px; border-radius: 10px; margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--accent-soft), var(--tag-bg));
+    height: 132px; border-radius: 10px; margin-bottom: 16px; overflow: hidden;
+    background: linear-gradient(135deg, var(--thumb-from, var(--accent-soft)), var(--thumb-to, var(--tag-bg)));
     display: flex; align-items: center; justify-content: center;
     font-size: 19px; font-weight: 700; color: var(--accent); letter-spacing: -0.01em;
+  }
+  .gallery-thumb img {
+    height: 100%; width: 100%; object-fit: contain; padding: 12px;
+    transition: transform .18s ease;
+  }
+  .gallery-card:hover .gallery-thumb img { transform: scale(1.05); }
+  .thumb-aida { --thumb-from: #fbf0dd; --thumb-to: #f2dcbe; }
+  .thumb-newsbara { --thumb-from: #e6edfb; --thumb-to: #ccdcf5; }
+  .thumb-squiz { --thumb-from: #e3f1f7; --thumb-to: #cbe3f1; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .thumb-aida { --thumb-from: #3b3226; --thumb-to: #4b3e2b; }
+    :root:not([data-theme="light"]) .thumb-newsbara { --thumb-from: #232c42; --thumb-to: #2c3652; }
+    :root:not([data-theme="light"]) .thumb-squiz { --thumb-from: #1f333c; --thumb-to: #26404c; }
+  }
+  :root[data-theme="dark"] .thumb-aida { --thumb-from: #3b3226; --thumb-to: #4b3e2b; }
+  :root[data-theme="dark"] .thumb-newsbara { --thumb-from: #232c42; --thumb-to: #2c3652; }
+  :root[data-theme="dark"] .thumb-squiz { --thumb-from: #1f333c; --thumb-to: #26404c; }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-card:hover .gallery-thumb img { transform: none; }
   }
   .gallery-title { font-size: 16.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
   .gallery-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 10px; }
@@ -191,15 +210,17 @@
   .list-item:last-child { border-bottom: none; }
   .list-item .li-title { font-weight: 600; font-size: 14.5px; }
   .list-item .li-sub { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
-  button.list-item {
+  button.list-item, a.list-item {
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
     width: 100%; text-align: left; font: inherit; color: var(--text);
     background: none; border: none; border-bottom: 1px solid var(--border); cursor: pointer;
   }
-  button.list-item:last-child { border-bottom: none; }
-  button.list-item .li-more { font-size: 12.5px; color: var(--accent); font-weight: 600; white-space: nowrap; }
-  button.list-item:hover .li-title, button.list-item:hover .li-more { color: var(--accent); }
-  button.list-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+  a.list-item { text-decoration: none; }
+  button.list-item:last-child, a.list-item:last-child { border-bottom: none; }
+  button.list-item .li-more, a.list-item .li-more { font-size: 12.5px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+  button.list-item:hover .li-title, button.list-item:hover .li-more,
+  a.list-item:hover .li-title, a.list-item:hover .li-more { color: var(--accent); }
+  button.list-item:focus-visible, a.list-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 
   /* 성적 모달 */
   .tr-summary {
@@ -335,7 +356,7 @@
 
     <div class="project-gallery">
       <a class="gallery-card" href="demos/aida.html">
-        <div class="gallery-thumb">아이다</div>
+        <div class="gallery-thumb thumb-aida"><img src="demos/images/aida/hoho-idle.webp" alt="아이다 마스코트 호호" loading="lazy" decoding="async"></div>
         <div class="gallery-title">아이다 <span class="award-badge">🥇 1등</span></div>
         <div class="gallery-meta">2026.04 – 2026.05 · 담당: Infra, FE</div>
         <div class="gallery-desc">AI의 오답을 직접 경험하며 데이터를 보완하는 스토리 기반 AI 리터러시 교육 서비스</div>
@@ -343,7 +364,7 @@
       </a>
 
       <a class="gallery-card" href="demos/newsbara.html">
-        <div class="gallery-thumb">뉴스바라</div>
+        <div class="gallery-thumb thumb-newsbara"><img src="demos/images/newsbara/bara-front.webp" alt="뉴스바라 마스코트 바라" loading="lazy" decoding="async"></div>
         <div class="gallery-title">뉴스바라 <span class="award-badge">🥉 3등</span></div>
         <div class="gallery-meta">2026.02 – 2026.03 · 담당: Backend, Infra</div>
         <div class="gallery-desc">관심 키워드와 기사 임베딩 기반으로 개인화된 IT 뉴스를 추천하는 큐레이션 서비스</div>
@@ -351,7 +372,7 @@
       </a>
 
       <a class="gallery-card" href="demos/squiz.html">
-        <div class="gallery-thumb">SQUIZ</div>
+        <div class="gallery-thumb thumb-squiz"><img src="demos/images/squiz-dolphin.png" alt="SQUIZ 마스코트 돌고래" loading="lazy" decoding="async"></div>
         <div class="gallery-title">SQUIZ</div>
         <div class="gallery-meta">2026.01 – 2026.02 · 담당: Full Stack (퀴즈 도메인)</div>
         <div class="gallery-desc">스터디 생성부터 퀴즈 학습, 복습, 통계까지 연결한 FSRS 기반 AI 학습 플랫폼</div>
@@ -505,7 +526,13 @@
         <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:8px;">수상 · 활동</h3>
         <div class="list-item"><div class="li-title">아이다 프로젝트 우수상 (1등)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2026.05</div></div>
         <div class="list-item"><div class="li-title">뉴스바라 프로젝트 우수상 (3등)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2026.04</div></div>
-        <div class="list-item"><div class="li-title">SSAFY 9월 우수 스터디 (알고리즘)</div><div class="li-sub">삼성 청년 SW·AI 아카데미 · 2025.09</div></div>
+        <a class="list-item" href="https://github.com/ssafy14-gumi1-algorithm" target="_blank" rel="noopener">
+          <span>
+            <span class="li-title" style="display:block;">SSAFY 9월 우수 스터디 (알고리즘)</span>
+            <span class="li-sub" style="display:block;">삼성 청년 SW·AI 아카데미 · 2025.09</span>
+          </span>
+          <span class="li-more">GitHub →</span>
+        </a>
         <div class="list-item"><div class="li-title">SQLD</div><div class="li-sub">한국데이터산업진흥원 · 2025.12</div></div>
         <div class="list-item"><div class="li-title">정보처리기사</div><div class="li-sub">한국산업인력공단 · 2024.12</div></div>
         <div class="list-item"><div class="li-title">TOEIC Speaking IM2</div><div class="li-sub">2026.04</div></div>

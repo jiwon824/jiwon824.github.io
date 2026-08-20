@@ -428,13 +428,6 @@ button { font-family: inherit; }
 /* 마스코트 */
 .mascot { position: relative; display: inline-block; filter: drop-shadow(0 20px 13px rgba(0,0,0,0.15)); }
 .mascot img { width: 100%; height: 100%; object-fit: contain; user-select: none; }
-.pupil {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle at 35% 35%, #3d3d4d 0%, #1a1a2d 100%);
-  box-shadow: inset 0 -1px 2px rgba(255,255,255,0.1);
-  transition: transform 0.1s ease-out;
-}
-.pupil .hl { position: absolute; border-radius: 50%; background: #fff; }
 
 /* =============================================================================
    QuizCourseList — /quiz-practice
@@ -1531,17 +1524,8 @@ function renderGameSelection() {
 }
 
 function mascotHtml(size) {
-  const eye = size * 0.08;
-  function pupil(cx) {
-    return '<div class="pupil" data-pupil style="width:' + eye + 'px;height:' + eye + 'px;' +
-      'left:' + (cx - eye / 2) + 'px;top:' + (size * 0.32 - eye / 2) + 'px">' +
-      '<span class="hl" style="width:' + (eye * 0.3) + 'px;height:' + (eye * 0.3) + 'px;top:18%;left:22%;opacity:.9"></span>' +
-      '<span class="hl" style="width:' + (eye * 0.15) + 'px;height:' + (eye * 0.15) + 'px;top:55%;left:55%;opacity:.5"></span>' +
-      '</div>';
-  }
   return '<div class="mascot" id="mascot" style="width:' + size + 'px;height:' + size + 'px">' +
     '<img src="images/squiz-dolphin.png" alt="SQUIZ 마스코트" draggable="false" />' +
-    pupil(size * 0.4) + pupil(size * 0.6) +
     '</div>';
 }
 
@@ -1961,7 +1945,7 @@ function render() {
   app.innerHTML = html;
   routeLabel.textContent = location.hash || '#/quiz';
 
-  if (state.screen === 'game') { startTyping(); bindMascot(); }
+  if (state.screen === 'game') { startTyping(); }
   if (state.screen === 'session') focusInput();
 }
 
@@ -1979,26 +1963,6 @@ function startTyping() {
     if (i < text.length) { node.textContent = text.slice(0, ++i); }
     else { setTimeout(function () { i = 0; if (node) node.textContent = ''; }, 2000); }
   }, 150);
-}
-
-/* --- 마스코트 눈동자 커서 추적 --- */
-function bindMascot() {
-  const mascot = document.getElementById('mascot');
-  if (!mascot) return;
-  const pupils = mascot.querySelectorAll('[data-pupil]');
-  window.onmousemove = function (e) {
-    const rect = mascot.getBoundingClientRect();
-    const dx = e.clientX - (rect.left + rect.width / 2);
-    const dy = e.clientY - (rect.top + rect.height / 2);
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const maxMove = 3;
-    const nx = dist > 0 ? dx / dist : 0;
-    const ny = dist > 0 ? dy / dist : 0;
-    const move = Math.min(dist / 100, 1) * maxMove;
-    pupils.forEach(function (p) {
-      p.style.transform = 'translate(' + (nx * move) + 'px,' + (ny * move) + 'px)';
-    });
-  };
 }
 
 function focusInput() {
