@@ -4218,6 +4218,316 @@ button { font-family: inherit; }
   padding-bottom: 40px;
 }
 .rag-evidence-rows dd { margin: 0; }
+
+/* =============================================================================
+   AIDA-STORY-CSS-START
+   RAG 스토리 구간에서만 쓰는 규칙.
+   원본: frontend/src/features/story/shared/story.css (미션 구간에 없던 것만)
+         frontend/src/features/story/rag/story-rag.css
+   ============================================================================= */
+.story-scene-visual {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.story-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.story-character-dialogue.right {
+  padding-right: var(--story-character-dialogue-content-start);
+}
+.story-character-dialogue.right .story-dialogue-speaker {
+  left: 0;
+  right: auto;
+}
+.story-character-dialogue.right .story-character-portrait {
+  right: calc(var(--story-character-dialogue-content-start) / 2);
+  transform: translateX(50%);
+}
+.story-scene-dialogue-panel.story-character-dialogue-panel-right .story-actions {
+  right: calc(clamp(20px, 4vw, 52px) + 200px);
+}
+
+/* 대사가 없는 stage 장면 — 화면 전체가 "다음" 버튼이 된다 */
+.story-scene-advance {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 calc(clamp(20px, 4vw, 52px) + clamp(-12px, -1vw, -6px))
+    clamp(12px, 1.5vw, 18px) 0;
+  border: 0;
+  background: transparent;
+  color: #6b3f1d;
+  font-family: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.story-scene-advance-label {
+  display: inline-block;
+  padding: 4px 2px;
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.72);
+}
+.story-scene-advance-label::after {
+  content: '>';
+  margin-left: 0.35em;
+}
+.story-scene-advance:hover .story-scene-advance-label {
+  color: #9a5a24;
+  transform: translateX(2px);
+}
+.story-scene-advance:focus-visible {
+  outline: 3px solid rgba(255, 250, 239, 0.86);
+  outline-offset: -18px;
+}
+.story-skip-action {
+  position: absolute;
+  top: clamp(18px, 3vmin, 30px);
+  right: clamp(18px, 3vmin, 30px);
+  z-index: 4;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 250, 239, 0.68);
+  color: #6b3f1d;
+  font-family: inherit;
+  font-size: clamp(12px, 1.2vw, 15px);
+  line-height: 1.2;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.72);
+}
+.story-skip-action:hover {
+  color: #9a5a24;
+  background: rgba(255, 250, 239, 0.86);
+}
+
+/* ----- story-rag.css ----- */
+.rag-story-visual {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+.rag-story-background {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* 도착 장면 — 사무소 간판에서 화면 전체로 빠지는 줌아웃 */
+.rag-story-visual-intro-opening {
+  transform-origin: 31% 0%;
+  animation: rag-story-office-sign-zoom-out 3000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform;
+}
+@keyframes rag-story-office-sign-zoom-out {
+  0%,
+  33% {
+    transform: translate3d(18%, 0, 0) scale(2);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 책을 뒤적이는 장면 — 사무소 AI 쪽으로 들어갔다 나오는 줌인 */
+.rag-story-visual-office-ai-book-focus {
+  transform-origin: 39% 54%;
+  animation: rag-story-office-ai-book-zoom 3000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform;
+}
+@keyframes rag-story-office-ai-book-zoom {
+  0% {
+    transform: scale(1);
+  }
+
+  22%,
+  62% {
+    transform: scale(2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 자동으로 넘어가는 장면에서는 "다음" 글자를 감춘다 */
+.rag-story-opening-advance .story-scene-advance-label,
+.rag-story-book-focus-advance .story-scene-advance-label,
+.rag-story-cappy-auto-advance .story-scene-advance-label {
+  opacity: 0;
+}
+
+/* 캐릭터 스프라이트 — 프레임 교체는 JS, 배치와 크기는 CSS 변수 */
+.rag-story-character-sprite {
+  position: absolute;
+  left: var(--rag-character-left);
+  bottom: var(--rag-character-bottom);
+  width: var(--rag-character-width);
+  z-index: var(--rag-character-z-index);
+}
+.rag-story-character-sprite-viewport {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: var(--rag-sprite-aspect-ratio);
+}
+/* 원본은 height: 100% + width: auto 라서, 스프라이트 비율이 뷰포트 비율보다 넓으면
+   이미지가 확대되고 좌우가 잘린다. 데모는 프레임을 박스 안에 넣고 바닥으로 정렬해
+   확대·잘림 없이, 프레임마다 다른 캔버스 높이(점프·팔 동작)도 그대로 살린다. */
+.rag-story-character-sprite-frame {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  image-rendering: pixelated;
+  transform: translate(var(--rag-sprite-offset-x), var(--rag-sprite-offset-y));
+}
+.rag-story-ai,
+.rag-story-hoho,
+.rag-story-guide-ai,
+.rag-story-player,
+.rag-story-cappy {
+  pointer-events: none;
+}
+.rag-story-cappy {
+  transform: translateX(-4%);
+}
+
+/* 카피 등장 — 화면 밖에서 달려 들어오는 이동 */
+.rag-story-cappy-transition-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.rag-story-cappy-transition-anchor {
+  position: absolute;
+  animation-name: rag-story-cappy-arrive;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+.rag-story-cappy-transition-anchor .rag-story-character-sprite {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+.rag-story-character-sprite--run .rag-story-character-sprite-frame {
+  will-change: transform;
+}
+@keyframes rag-story-cappy-arrive {
+  0% {
+    opacity: 0.92;
+    transform: translate(220px, 240px) scale(0.94);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* 대사창 초상화 — 화자별 크기·위치 보정 */
+.story-character-portrait.rag-portrait {
+  width: clamp(156px, 16vw, 212px);
+  height: clamp(196px, 34dvh, 296px);
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.story-character-portrait.rag-portrait-ai {
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  height: auto;
+  max-height: none;
+}
+.story-character-dialogue.left .story-character-portrait.rag-portrait-ai {
+  transform: translateX(calc(-50% - 20px));
+}
+.story-character-portrait.rag-portrait-player {
+  width: 255px;
+  min-width: 255px;
+  max-width: 255px;
+  height: auto;
+  max-height: none;
+}
+.story-character-dialogue.right .story-character-portrait.rag-portrait-player {
+  transform: translateX(calc(50% + 20px)) scaleX(-1);
+}
+.story-character-portrait.rag-portrait-community-bot {
+  width: 222px;
+  min-width: 222px;
+  max-width: 222px;
+  height: auto;
+  max-height: none;
+  transform-origin: center bottom;
+}
+.story-character-dialogue.left .story-character-portrait.rag-portrait-community-bot {
+  transform: translateX(calc(-50% - 20px));
+}
+.story-character-portrait.rag-portrait-cappy {
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  height: auto;
+  max-height: none;
+  transform-origin: center bottom;
+}
+.story-character-dialogue.left .story-character-portrait.rag-portrait-cappy {
+  transform: translateX(calc(-50% - 10px));
+}
+.story-character-portrait.rag-portrait-hoho {
+  width: 218px;
+  min-width: 218px;
+  max-width: 218px;
+  height: auto;
+  max-height: none;
+  transform-origin: center bottom;
+}
+.story-character-dialogue.left .story-character-portrait.rag-portrait-hoho {
+  transform: translateX(calc(-50% - 20px));
+}
+
+@media (max-width: 1024px) {
+.rag-story-cappy {
+    transform: translateX(-6%);
+  }
+}
+@media (max-width: 920px) {
+.story-character-dialogue.right {
+    padding-left: clamp(88px, 25vw, 132px);
+    padding-right: 0;
+  }
+.story-character-dialogue.right .story-character-portrait {
+    left: calc(clamp(88px, 25vw, 132px) / 2);
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+@media (max-width: 720px) {
+.rag-story-cappy {
+    transform: translateX(-8%);
+  }
+}
+/* AIDA-STORY-CSS-END */
 </style>
 <style>
 /* =============================================================================
@@ -4382,10 +4692,258 @@ const SEARCH_MS = 3000;
 const SCAN_MS = 3000;
 
 /* =============================================================================
+   스토리 데이터 — 원본 features/story/data/ragStory.ts 의 RAG 인트로 구간
+   (S191 ~ S218). 미니게임 직전까지의 장면을 순서대로 담는다.
+   ============================================================================= */
+const SIMG = 'images/aida/story/';
+
+const STORY_SCENES = [
+  { id: 'rag-s191', n: 191, kind: 'stage', section: '6:30 ~ 7:00 | 도착 + 호호 등장',
+    title: '마을사무소에 도착한다.', speaker: '',
+    body: '마을사무소. 두꺼운 주민등록 책과 사무소 AI가 보인다.' },
+  { id: 'rag-s192', n: 192, kind: 'dialogue', section: '6:30 ~ 7:00 | 도착 + 호호 등장',
+    title: '호호가 반긴다.', speaker: '호호',
+    body: '이야~! 새 입주자 분이시죠? 어서 오세요.' },
+  { id: 'rag-s193', n: 193, kind: 'dialogue', section: '6:30 ~ 7:00 | 도착 + 호호 등장',
+    title: '주민등록 책 소개', speaker: '호호',
+    body: '여기는 마을사무소예요. 주민들 정보를 이 책에 기록해두는 곳이에요.' },
+  { id: 'rag-s194', n: 194, kind: 'dialogue', section: '6:30 ~ 7:00 | 도착 + 호호 등장',
+    title: '사무소 AI 소개', speaker: '호호',
+    body: '마을사무소 AI 친구가 이 책을 보고 주민들을 알아본답니다.' },
+  { id: 'rag-s196', n: 196, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '사무소 AI 환영 인사', speaker: '사무소 AI',
+    body: '환영합니다! 주민 정보를 확인해드릴게요!' },
+  { id: 'rag-s197', n: 197, kind: 'stage', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '책을 뒤적이는 시늉', speaker: '',
+    body: '사무소 AI가 주민등록 책을 뒤적이는 시늉을 한다.' },
+  { id: 'rag-s198', n: 198, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '첫 번째 추측', speaker: '사무소 AI',
+    body: '당신은 올리브를 좋아하는 8살 키키시죠?' },
+  { id: 'rag-s199', n: 199, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '플레이어 반응', speaker: '플레이어',
+    body: '어?? 그거 입구에서도 들은 것 같은데?!' },
+  { id: 'rag-s200', n: 200, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '두 번째 추측', speaker: '사무소 AI',
+    body: '그럼 양말을 모으는 12살 토토?' },
+  { id: 'rag-s201', n: 201, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '아이가 눈치챈다', speaker: '아이',
+    body: '입구에서도 똑같이 이랬잖아. 기억나?' },
+  { id: 'rag-s202', n: 202, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '엉뚱한 색 추측', speaker: '사무소 AI',
+    body: '음 그럼 좋아하는 색깔은 화요일이시죠?' },
+  { id: 'rag-s203', n: 203, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '플레이어가 반박한다', speaker: '플레이어',
+    body: '화요일은 색깔이 아닌데?!' },
+  { id: 'rag-s204', n: 204, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '엉뚱한 음식 추측', speaker: '사무소 AI',
+    body: '어 그럼 좋아하는 음식은 의자?' },
+  { id: 'rag-s205', n: 205, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '플레이어가 다시 반박한다', speaker: '플레이어',
+    body: '의자를 어떻게 먹어!' },
+  { id: 'rag-s206', n: 206, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '정보 부재 확인', speaker: '호호',
+    body: '역시 주민등록 책에 새 입주자 정보가 아직 없어요.' },
+  { id: 'rag-s207', n: 207, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: 'AI가 추측이었다고 말한다', speaker: '사무소 AI',
+    body: '정보가 없어서 그냥 추측했어요' },
+  { id: 'rag-s208', n: 208, kind: 'dialogue', section: '7:00 ~ 7:35 | 자료 없이 추측하는 AI',
+    title: '학습 포인트 제시', speaker: '아이',
+    body: '자료가 없는데 계속 맞는 척 말하고 있어' },
+  { id: 'rag-s209', n: 209, kind: 'stage', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '멀리서 외침이 들린다.', speaker: '',
+    body: '멀리서 누군가 급하게 달려오는 소리가 들린다.' },
+  { id: 'rag-s210', n: 210, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '카피 등장', speaker: '카피',
+    body: '잠깐만요!!' },
+  { id: 'rag-s211', n: 211, kind: 'stage', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '카피가 주민 카드를 들고 도착한다.', speaker: '',
+    body: '카피가 편지 가방을 안고 전속력으로 달려온다.' },
+  { id: 'rag-s212', n: 212, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '늦은 이유', speaker: '카피',
+    body: '헉 헉... 미안해요. 오늘 배달이 너무 많아서 너무 늦었어요.' },
+  { id: 'rag-s213', n: 213, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '주민 카드 전달', speaker: '카피',
+    body: '이거 꼭 전달한다고 약속했잖아요.' },
+  { id: 'rag-s214', n: 214, kind: 'stage', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '호호가 주민 카드를 받는다.', speaker: '',
+    body: '호호가 주민 카드를 받아 주민등록 책 옆에 올려둔다.' },
+  { id: 'rag-s215', n: 215, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '고마움을 전한다', speaker: '호호',
+    body: '이제야 왔네요, 카피! 정말 고마워요!' },
+  { id: 'rag-s216', n: 216, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '약속을 지켰다', speaker: '카피',
+    body: '약속은 꼭 지키니까요.' },
+  { id: 'rag-s217', n: 217, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '정확한 자료가 필요하다', speaker: '아이',
+    body: 'AI가 정확히 답하려면, 먼저 정확한 자료가 필요하구나.' },
+  { id: 'rag-s218', n: 218, kind: 'dialogue', section: '7:35 ~ 8:00 | 카피 등장',
+    title: '이제 네가 고를 차례', speaker: '아이',
+    body: '이제 어떤 자료를 AI에게 보여줘야 할지 네가 골라보자.' },
+];
+
+const STORY_INDEX = {};
+STORY_SCENES.forEach(function (s, i) { STORY_INDEX[s.id] = i; });
+
+function storyScene(id) {
+  return STORY_SCENES[STORY_INDEX[id]] || STORY_SCENES[0];
+}
+function storyNextId(id) {
+  const next = STORY_SCENES[STORY_INDEX[id] + 1];
+  return next ? next.id : null;
+}
+
+// RagStoryCharacterSprite 의 RAG_SPRITE_CONFIG
+function frames(prefix, count) {
+  const list = [];
+  for (let i = 1; i <= count; i += 1) list.push(prefix + i + '.webp');
+  return list;
+}
+// ratio 는 원본 config 값이 아니라 실제 에셋(프레임 중 가장 큰 캔버스) 비율이다.
+// 원본 값은 에셋이 교체되기 전 크기라서, 그대로 쓰면 캐릭터가 확대되고 좌우가 잘린다.
+const SPRITES = {
+  guide_ai_animated_idle: { frames: frames('guide-ai-idle-', 4), ratio: '161 / 210', ms: 1200 },
+  player_animated_idle: { frames: frames('player-idle-', 4), ratio: '304 / 514', ms: 1200 },
+  hoho_idle: { frames: frames('hoho-book-idle-', 4), ratio: '284 / 331', ms: 1200 },
+  hoho_plain_idle: { frames: frames('hoho-idle-', 4), ratio: '284 / 331', ms: 1200 },
+  hoho_startle: { frames: frames('hoho-startle-', 3), ratio: '284 / 323', ms: 800 },
+  cappy_delivery_idle: { frames: frames('cappy-idle-', 4), ratio: '351 / 393', ms: 1200 },
+  cappy_delivery_run: { frames: frames('cappy-run-', 6), ratio: '350 / 390', ms: 720 },
+  cappy_giving_a_letter: { frames: frames('cappy-letter-', 3), ratio: '554 / 517', ms: 900, ox: '6%', oy: '5%' },
+  community_center_bot_idle: { frames: frames('office-ai-idle-', 4), ratio: '130 / 250', ms: 1200 },
+  community_center_bot_failure: { frames: frames('office-ai-failure-', 6), ratio: '330 / 583', ms: 1200 },
+  // ox 는 넣지 않는다. 이 에셋은 비율상 contain 이 가로를 꽉 채워서 가로 여유가 0 이라,
+  // translate 를 걸면 뷰포트(overflow: hidden)가 그만큼 책 옆면을 잘라낸다.
+  community_center_bot_holding_book_idle: {
+    frames: frames('office-ai-book-', 8), ratio: '310 / 584', ms: 1600,
+  },
+};
+
+// rag/data/ragCharacterLayouts.ts — 배치는 CSS 가 아니라 이 표가 정한다
+// y 는 캐릭터 발이 놓이는 높이다. 호호와 카피는 실제 서비스 화면(exec/images/demo-17,18)에
+// 맞춰 올렸다 — 원본 값 그대로면 발이 대사창 뒤로 들어간다.
+const LAYOUTS = {
+  hoho: {
+    desktop: { x: '20%', y: '27%', width: '13.5%', z: 3 },
+    tablet: { x: '21%', y: '34%', width: '10.08%', z: 3 },
+    mobile: { x: '21%', y: '34%', width: '11.34%', z: 3 },
+  },
+  'office-ai': {
+    desktop: { x: '35%', y: '32%', width: '10%', z: 3 },
+    tablet: { x: '63%', y: '32%', width: '10%', z: 3 },
+    mobile: { x: '73%', y: '32%', width: '10%', z: 3 },
+  },
+  'guide-ai': {
+    desktop: { x: '60%', y: '30%', width: '10.8%', z: 2 },
+    tablet: { x: '63%', y: '15%', width: '13.2%', z: 2 },
+    mobile: { x: '64%', y: '14%', width: '15%', z: 2 },
+  },
+  player: {
+    desktop: { x: '65%', y: '24%', width: '11.6%', z: 2 },
+    tablet: { x: '68%', y: '9%', width: '14%', z: 2 },
+    mobile: { x: '69%', y: '8%', width: '16%', z: 2 },
+  },
+  cappy: {
+    desktop: { x: '46%', y: '23.5%', width: '14%', z: 3 },
+    tablet: { x: '46%', y: '23.5%', width: '14%', z: 3 },
+    mobile: { x: '46%', y: '23.5%', width: '14%', z: 3 },
+  },
+};
+
+function ragViewport(width) {
+  if (width <= 720) return 'mobile';
+  if (width <= 1024) return 'tablet';
+  return 'desktop';
+}
+
+function place(id, spriteKey, layout, animation) {
+  return {
+    id: id, spriteKey: spriteKey, animation: animation || 'idle',
+    x: layout.x, y: layout.y, width: layout.width, z: layout.z,
+  };
+}
+
+// resolveRagStoryVisualCharacters — 장면 번호에 따라 스프라이트를 바꿔 끼운다
+const HOHO_PLAIN = ['rag-s196', 'rag-s197'];
+const HOHO_STARTLE = ['rag-s198', 'rag-s199', 'rag-s200', 'rag-s201',
+  'rag-s202', 'rag-s203', 'rag-s204', 'rag-s205'];
+
+function storyPhase(n) {
+  if (n >= 245) return 'ending';
+  if (n >= 212) return 'delivery';
+  if (n >= 196) return 'guess';
+  return 'intro';
+}
+
+function storyCharacters(scene, vp) {
+  const n = scene.n;
+  const list = [
+    place('hoho', 'hoho_idle', LAYOUTS.hoho[vp]),
+    place('office-ai', 'community_center_bot_idle', LAYOUTS['office-ai'][vp]),
+  ].map(function (c) {
+    if (c.id === 'office-ai' && n >= 207 && n <= 218) {
+      return Object.assign({}, c, { spriteKey: 'community_center_bot_failure' });
+    }
+    // 스프라이트를 바꿔 껴도 캐릭터 키는 그대로여야 한다. 박스가 bottom 고정 + aspect-ratio 라
+    // width 를 키우면 세로도 같이 자란다. idle 높이(10% x 250/130)에서 역산한 값이 10.2% 다.
+    if (c.id === 'office-ai' && n >= 197 && n <= 205) {
+      return Object.assign({}, c, {
+        spriteKey: 'community_center_bot_holding_book_idle', width: '10.2%',
+      });
+    }
+    if (c.id === 'hoho' && HOHO_STARTLE.indexOf(scene.id) >= 0) {
+      return Object.assign({}, c, { spriteKey: 'hoho_startle' });
+    }
+    if (c.id === 'hoho' && HOHO_PLAIN.indexOf(scene.id) >= 0) {
+      return Object.assign({}, c, {
+        spriteKey: 'hoho_plain_idle', x: vp === 'desktop' ? '19.5%' : c.x,
+      });
+    }
+    return c;
+  });
+
+  // 아이와 플레이어는 S191 ~ S219 구간에만 함께 서 있다
+  list.push(place('guide-ai', 'guide_ai_animated_idle', LAYOUTS['guide-ai'][vp]));
+  list.push(place('player', 'player_animated_idle', LAYOUTS.player[vp]));
+
+  // 카피는 카드를 전달하는 시점부터 화면에 남는다
+  if (storyPhase(n) === 'delivery') {
+    const cappy = place('cappy', 'cappy_delivery_idle', LAYOUTS.cappy[vp]);
+    list.push(scene.id === 'rag-s213'
+      ? Object.assign({}, cappy, { spriteKey: 'cappy_giving_a_letter', width: '16.5%', x: '43%' })
+      : cappy);
+  }
+
+  return list;
+}
+
+// utils/ragSpeakerDialogue.ts — 화자별 초상화와 좌우 배치
+const STORY_SPEAKERS = {
+  '플레이어': { name: PROFILE.nickname, img: 'portrait-player.webp', position: 'right',
+    cls: 'rag-portrait rag-portrait-player', bottom: '-150px' },
+  '아이': { name: '아이', img: 'portrait-guide-ai.webp', position: 'left',
+    cls: 'rag-portrait rag-portrait-ai', bottom: '-80px' },
+  '호호': { name: '호호', img: 'portrait-hoho.webp', position: 'left',
+    cls: 'rag-portrait rag-portrait-hoho', bottom: '-70px' },
+  '사무소 AI': { name: '사무소 AI', img: 'portrait-office-ai.webp', position: 'left',
+    cls: 'rag-portrait rag-portrait-community-bot', bottom: '-100px' },
+  '카피': { name: '카피', img: 'portrait-cappy.webp', position: 'left',
+    cls: 'rag-portrait rag-portrait-cappy', bottom: '-70px' },
+};
+
+// StoryPrototypePage 의 자동 진행 타이머
+const STORY_OPENING_MS = 3500;   // S191 줌아웃
+const STORY_BOOK_MS = 3000;      // S197 줌인
+const CAPPY_RUN_MS = 1600;       // S211 카피 달려오기
+const CAPPY_ARRIVED_MS = 1000;
+
+/* =============================================================================
    상태 — features/rag/utils/ragMissionFlow.ts 의 RagMissionState 를 옮긴 것
    ============================================================================= */
 function initialState() {
   return {
+    mode: 'story',          // story | mission
+    sceneId: 'rag-s191',    // 스토리 장면
+    cappyRunning: false,    // 카피 등장 연출 진행 중
     step: 'intro',          // intro | card-select | card-feedback | evidence | reward | quiz | done
     selectedCard: null,     // resident | rumor | empty
     scanPhase: 'idle',      // idle | searching-db | scanning-card | done
@@ -4895,6 +5453,161 @@ function viewDone() {
 }
 
 /* =============================================================================
+   스토리 화면 — RagStoryVisual + RagStoryScenePanel 의 마크업
+   ============================================================================= */
+// 장면이 바뀌어도 스프라이트 프레임은 이어지도록 캐릭터별로 기억해 둔다
+const spriteFrame = {};
+
+function spriteHtml(c, className) {
+  const cfg = SPRITES[c.spriteKey];
+  const list = cfg.frames.map(function (f) { return SIMG + f; });
+  const index = (spriteFrame[c.id] || 0) % list.length;
+  const cls = ['rag-story-character-sprite', 'rag-story-character-sprite--' + c.animation, className]
+    .filter(Boolean).join(' ');
+  const style = '--rag-character-left:' + c.x
+    + ';--rag-character-bottom:' + c.y
+    + ';--rag-character-width:' + c.width
+    + ';--rag-character-z-index:' + (c.z || 1)
+    + ';--rag-sprite-aspect-ratio:' + cfg.ratio
+    + ';--rag-sprite-offset-x:' + (cfg.ox || '0%')
+    + ';--rag-sprite-offset-y:' + (cfg.oy || '0%');
+
+  return '<div class="' + cls + '" aria-hidden="true" data-character-id="' + c.id + '"'
+    + ' data-frames="' + list.join('|') + '" data-frame-ms="' + Math.max(1, Math.round(cfg.ms / list.length)) + '"'
+    + ' style="' + style + '">'
+    + '<div class="rag-story-character-sprite-viewport">'
+    + '<img class="rag-story-character-sprite-frame" src="' + list[index] + '" alt="" draggable="false">'
+    + '</div></div>';
+}
+
+function storyVisual(scene, vp) {
+  const cls = ['rag-story-visual', 'rag-story-visual-' + storyPhase(scene.n),
+    scene.id === 'rag-s191' ? 'rag-story-visual-intro-opening' : '',
+    scene.id === 'rag-s197' ? 'rag-story-visual-office-ai-book-focus' : ''].filter(Boolean).join(' ');
+
+  let html = '<div class="' + cls + '">'
+    + '<div class="rag-story-background" aria-hidden="true" style="background-image:url(' + SIMG + 'bg-community-center.webp)"></div>'
+    + storyCharacters(scene, vp).map(function (c) {
+      return spriteHtml(c, c.id === 'office-ai' ? 'rag-story-ai' : 'rag-story-' + c.id);
+    }).join('');
+
+  if (state.cappyRunning) {
+    const target = LAYOUTS.cappy[vp];
+    html += '<div class="rag-story-cappy-transition-layer" aria-hidden="true">'
+      + '<div class="rag-story-cappy-transition-anchor" style="left:' + target.x + ';bottom:' + target.y
+      + ';width:' + target.width + ';z-index:' + (target.z + 1)
+      + ';animation-duration:' + CAPPY_RUN_MS + 'ms">'
+      + spriteHtml(place('cappy-transition', 'cappy_delivery_run', target, 'run'),
+        'rag-story-cappy-transition-sprite')
+      + '</div></div>';
+  }
+
+  return html + '</div>';
+}
+
+function storyPanel(scene) {
+  // 카피가 달려오는 동안에는 대사창을 모두 감춘다
+  if (state.cappyRunning) return '';
+
+  const speaker = STORY_SPEAKERS[scene.speaker];
+  const label = storyNextId(scene.id) ? '다음' : '자료 카드 고르러 가기';
+
+  if (scene.kind === 'dialogue' && speaker) {
+    const panelCls = ['story-scene-dialogue-panel', 'can-advance',
+      speaker.position === 'right' ? 'story-character-dialogue-panel-right' : ''].filter(Boolean).join(' ');
+
+    return '<div class="' + panelCls + '" data-action="story-advance">'
+      + '<div class="story-character-dialogue ' + speaker.position + '">'
+      + '<img class="story-character-portrait ' + speaker.cls + '" src="' + SIMG + speaker.img + '"'
+      + ' alt="" aria-hidden="true" style="--story-character-portrait-bottom:' + speaker.bottom + '">'
+      + '<div class="story-character-dialogue-body">'
+      + '<strong class="story-dialogue-speaker">' + esc(speaker.name) + '</strong>'
+      + '<div class="story-dialogue"><p class="story-dialogue-text">' + esc(scene.body) + '</p></div>'
+      + '</div></div>'
+      + '<div class="story-actions">'
+      + '<button class="story-text-action" type="button" data-action="story-advance">' + label + '</button>'
+      + '</div></div>';
+  }
+
+  // stage 장면은 화면 전체가 "다음" 버튼이 된다 (자동 진행 장면은 글자를 감춘다)
+  const autoCls = scene.id === 'rag-s191' ? ' rag-story-opening-advance'
+    : scene.id === 'rag-s197' ? ' rag-story-book-focus-advance'
+      : (scene.id === 'rag-s209' || scene.id === 'rag-s211' || scene.id === 'rag-s214')
+        ? ' rag-story-cappy-auto-advance' : '';
+
+  return '<button class="story-scene-advance' + autoCls + '" type="button"'
+    + ' aria-label="다음 장면으로 이동" data-action="story-advance">'
+    + '<span class="story-scene-advance-label">' + label + '</span></button>';
+}
+
+function renderStory() {
+  const scene = storyScene(state.sceneId);
+  const vp = ragViewport(window.innerWidth);
+
+  app.innerHTML =
+    '<main class="story-page"><div class="story-mini-game-shell">'
+    + '<button class="story-skip-action" type="button" data-action="story-skip">미니게임으로 건너뛰기</button>'
+    + '<section class="story-scene-frame ' + scene.kind + '">'
+    + '<div class="story-scene-background" aria-hidden="true">'
+    + '<div class="story-scene-visual">' + storyVisual(scene, vp) + '</div></div>'
+    + '<div class="story-scene-content">' + storyPanel(scene) + '</div>'
+    + '</section></div></main>';
+
+  routeLabel.textContent = '#/story/rag · ' + (STORY_INDEX[scene.id] + 1) + ' / ' + STORY_SCENES.length;
+  questionLabel.textContent = 'Ch.03 · ' + scene.section;
+  startSprites();
+  runStoryTimers();
+}
+
+// RagStoryCharacterSprite 의 프레임 교체 (원본은 setInterval + useState)
+function startSprites() {
+  app.querySelectorAll('[data-frames]').forEach(function (el) {
+    const list = el.getAttribute('data-frames').split('|');
+    if (list.length <= 1) return;
+    const key = el.getAttribute('data-character-id');
+    const img = el.querySelector('.rag-story-character-sprite-frame');
+    timers.push(setInterval(function () {
+      spriteFrame[key] = ((spriteFrame[key] || 0) + 1) % list.length;
+      img.src = list[spriteFrame[key]];
+    }, Number(el.getAttribute('data-frame-ms'))));
+  });
+}
+
+// StoryPrototypePage 의 자동 진행 useEffect 들
+function runStoryTimers() {
+  if (state.cappyRunning) {
+    later(function () { go({ cappyRunning: false, sceneId: 'rag-s212' }); },
+      CAPPY_RUN_MS + CAPPY_ARRIVED_MS);
+    return;
+  }
+  if (state.sceneId === 'rag-s191') later(function () { storyGo('rag-s192'); }, STORY_OPENING_MS);
+  else if (state.sceneId === 'rag-s197') later(function () { storyGo('rag-s198'); }, STORY_BOOK_MS);
+  else if (state.sceneId === 'rag-s211') later(function () { storyGo('rag-s212'); }, CAPPY_ARRIVED_MS);
+  else if (state.sceneId === 'rag-s214') later(function () { storyGo('rag-s215'); }, CAPPY_ARRIVED_MS);
+}
+
+function storyGo(id) {
+  // S209 에 닿는 순간 카피가 달려오는 연출로 넘어간다 (원본과 동일하게 S210 은 건너뛴다)
+  if (id === 'rag-s209') { go({ sceneId: 'rag-s211', cappyRunning: true }); return; }
+  go({ sceneId: id, cappyRunning: false });
+}
+
+function storyAdvance() {
+  if (state.cappyRunning) return;
+  const next = storyNextId(state.sceneId);
+  if (next) storyGo(next);
+  else startMission();
+}
+
+function startMission() {
+  go({
+    mode: 'mission', step: 'intro', cappyRunning: false,
+    selectedCard: null, scanPhase: 'idle', dialogIndex: 0,
+    selectionEnabled: false, focusedCard: null, cardView: 'select',
+  });
+}
+
+/* =============================================================================
    라우팅 — 현재 상태에 맞는 화면 고르기
    ============================================================================= */
 function buildView() {
@@ -4918,9 +5631,12 @@ function buildView() {
    ============================================================================= */
 const app = document.getElementById('app');
 const routeLabel = document.getElementById('routeLabel');
+const questionLabel = document.getElementById('questionLabel');
 const gate = document.getElementById('viewportGate');
 
 function render() {
+  if (state.mode === 'story') { renderStory(); return; }
+
   const view = buildView();
   app.innerHTML =
     '<main class="story-page rag-page"><div class="story-mini-game-shell">'
@@ -4935,6 +5651,7 @@ function render() {
     + '</div></div></main>';
 
   routeLabel.textContent = '#/rag · ' + progressLabel();
+  questionLabel.textContent = '질문: “' + QUESTION + '”';
   applyScale();
   runTypewriter();
   runStepTimers();
@@ -4955,7 +5672,17 @@ function applyGate() {
   gate.classList.toggle('is-blocked', box.width < 1000 || box.height < 600);
 }
 
-window.addEventListener('resize', function () { applyScale(); applyGate(); });
+// 스토리 캐릭터 배치는 CSS 가 아니라 뷰포트 구간 표가 정하므로, 구간이 바뀌면 다시 그린다
+let lastViewport = ragViewport(window.innerWidth);
+
+window.addEventListener('resize', function () {
+  applyScale();
+  applyGate();
+  const vp = ragViewport(window.innerWidth);
+  if (vp === lastViewport) return;
+  lastViewport = vp;
+  if (state.mode === 'story') render();
+});
 
 /* =============================================================================
    타이핑 연출 — RagTypewriterText (효과음은 제외)
@@ -4992,6 +5719,14 @@ function runStepTimers() {
    ============================================================================= */
 function dispatch(action, el) {
   switch (action) {
+    case 'story-advance':
+      storyAdvance();
+      break;
+
+    case 'story-skip':
+      startMission();
+      break;
+
     case 'start':
       go({ step: 'card-select', selectionEnabled: false, cardView: 'select', focusedCard: null });
       break;
@@ -5078,11 +5813,26 @@ app.addEventListener('click', function (e) {
   dispatch(el.getAttribute('data-action'), el);
 });
 
+// useAdvanceOnSpace — 스토리 구간은 스페이스로도 넘어간다
+document.addEventListener('keydown', function (e) {
+  if (e.code !== 'Space' || state.mode !== 'story') return;
+  if (document.documentElement.classList.contains('pf-lock')) return;
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  e.preventDefault();
+  storyAdvance();
+});
+
 document.getElementById('btnHome').addEventListener('click', reset);
-document.getElementById('questionLabel').textContent = '질문: “' + QUESTION + '”';
 
 render();
 applyGate();
+
+// 프레임이 교체될 때 깜빡이지 않도록 스토리 이미지를 미리 받아 둔다
+[].concat(
+  Object.keys(SPRITES).reduce(function (all, key) { return all.concat(SPRITES[key].frames); }, []),
+  Object.keys(STORY_SPEAKERS).map(function (key) { return STORY_SPEAKERS[key].img; })
+).forEach(function (file) { new Image().src = SIMG + file; });
 </script>
 
 <div class="pf-overlay" id="pfOverlay">
